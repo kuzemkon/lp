@@ -29,6 +29,8 @@ type company {
   updated_at_func: datetime_functions
   geography: String
   sector: String
+  company_reports(filter: company_report_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [company_report]
+  company_reports_func: count_functions
 }
 
 type company_aggregated {
@@ -45,6 +47,7 @@ type company_aggregated_count {
   updated_at: Int
   geography: Int
   sector: Int
+  company_reports: Int
 }
 
 input company_filter {
@@ -56,6 +59,8 @@ input company_filter {
   updated_at_func: datetime_function_filter_operators
   geography: string_filter_operators
   sector: string_filter_operators
+  company_reports: company_report_quantifier_filter
+  company_reports_func: count_function_filter_operators
   _and: [company_filter]
   _or: [company_filter]
 }
@@ -181,6 +186,38 @@ type company_report_mutated {
   data: company_report
 }
 
+input company_report_quantifier_filter {
+  id: id_filter_operators
+  fund_report_id: fund_report_filter
+  company_id: company_filter
+  report_date: date_filter_operators
+  report_date_func: date_function_filter_operators
+  investment_date: date_filter_operators
+  investment_date_func: date_function_filter_operators
+  invested_capital: number_filter_operators
+  enterprise_value: number_filter_operators
+  equity_value: number_filter_operators
+  debt: number_filter_operators
+  valuation_basis: string_filter_operators
+  valuation_multiple: number_filter_operators
+  revenue: number_filter_operators
+  ebitda: number_filter_operators
+  realized_value: number_filter_operators
+  unrealized_value: number_filter_operators
+  total_value: number_filter_operators
+  thesis_commentary: string_filter_operators
+  irr: number_filter_operators
+  status: string_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  updated_at: date_filter_operators
+  updated_at_func: datetime_function_filter_operators
+  _and: [company_report_filter]
+  _or: [company_report_filter]
+  _some: company_report_filter
+  _none: company_report_filter
+}
+
 input count_function_filter_operators {
   count: number_filter_operators
 }
@@ -196,6 +233,7 @@ input create_company_input {
   updated_at: Date
   geography: String
   sector: String
+  company_reports: [create_company_report_input]
 }
 
 input create_company_report_input {
@@ -228,6 +266,7 @@ input create_fund_input {
   created_at: Date
   updated_at: Date
   vintage: Int
+  fund_reports: [create_fund_report_input]
 }
 
 input create_fund_report_input {
@@ -246,6 +285,7 @@ input create_fund_report_input {
   dpi: Float
   created_at: Date
   updated_at: Date
+  company_reports: [create_company_report_input]
 }
 
 input create_organizations_input {
@@ -253,6 +293,7 @@ input create_organizations_input {
   name: String!
   created_at: Date
   updated_at: Date
+  fund_reports: [create_fund_report_input]
 }
 
 """ISO8601 Date values"""
@@ -1300,6 +1341,8 @@ type fund {
   updated_at: Date
   updated_at_func: datetime_functions
   vintage: Int
+  fund_reports(filter: fund_report_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [fund_report]
+  fund_reports_func: count_functions
 }
 
 type fund_aggregated {
@@ -1321,6 +1364,7 @@ type fund_aggregated_count {
   created_at: Int
   updated_at: Int
   vintage: Int
+  fund_reports: Int
 }
 
 type fund_aggregated_fields {
@@ -1335,6 +1379,8 @@ input fund_filter {
   updated_at: date_filter_operators
   updated_at_func: datetime_function_filter_operators
   vintage: number_filter_operators
+  fund_reports: fund_report_quantifier_filter
+  fund_reports_func: count_function_filter_operators
   _and: [fund_filter]
   _or: [fund_filter]
 }
@@ -1364,6 +1410,8 @@ type fund_report {
   created_at_func: datetime_functions
   updated_at: Date
   updated_at_func: datetime_functions
+  company_reports(filter: company_report_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [company_report]
+  company_reports_func: count_functions
 }
 
 type fund_report_aggregated {
@@ -1395,6 +1443,7 @@ type fund_report_aggregated_count {
   dpi: Int
   created_at: Int
   updated_at: Int
+  company_reports: Int
 }
 
 type fund_report_aggregated_fields {
@@ -1428,6 +1477,8 @@ input fund_report_filter {
   created_at_func: datetime_function_filter_operators
   updated_at: date_filter_operators
   updated_at_func: datetime_function_filter_operators
+  company_reports: company_report_quantifier_filter
+  company_reports_func: count_function_filter_operators
   _and: [fund_report_filter]
   _or: [fund_report_filter]
 }
@@ -1436,6 +1487,33 @@ type fund_report_mutated {
   key: ID!
   event: EventEnum
   data: fund_report
+}
+
+input fund_report_quantifier_filter {
+  id: id_filter_operators
+  organization_id: organizations_filter
+  fund_id: fund_filter
+  report_date: date_filter_operators
+  report_date_func: date_function_filter_operators
+  fund_size: number_filter_operators
+  num_investments: number_filter_operators
+  capital_called: number_filter_operators
+  unrealized_value: number_filter_operators
+  realized_value: number_filter_operators
+  total_value: number_filter_operators
+  moic: number_filter_operators
+  net_irr: number_filter_operators
+  dpi: number_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  updated_at: date_filter_operators
+  updated_at_func: datetime_function_filter_operators
+  company_reports: company_report_quantifier_filter
+  company_reports_func: count_function_filter_operators
+  _and: [fund_report_filter]
+  _or: [fund_report_filter]
+  _some: fund_report_filter
+  _none: fund_report_filter
 }
 
 """BigInt value"""
@@ -1541,6 +1619,8 @@ type organizations {
   created_at_func: datetime_functions
   updated_at: Date
   updated_at_func: datetime_functions
+  fund_reports(filter: fund_report_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [fund_report]
+  fund_reports_func: count_functions
 }
 
 type organizations_aggregated {
@@ -1555,6 +1635,7 @@ type organizations_aggregated_count {
   name: Int
   created_at: Int
   updated_at: Int
+  fund_reports: Int
 }
 
 input organizations_filter {
@@ -1564,6 +1645,8 @@ input organizations_filter {
   created_at_func: datetime_function_filter_operators
   updated_at: date_filter_operators
   updated_at_func: datetime_function_filter_operators
+  fund_reports: fund_report_quantifier_filter
+  fund_reports_func: count_function_filter_operators
   _and: [organizations_filter]
   _or: [organizations_filter]
 }
@@ -1655,6 +1738,7 @@ input update_company_input {
   updated_at: Date
   geography: String
   sector: String
+  company_reports: [update_company_report_input]
 }
 
 input update_company_report_input {
@@ -1687,6 +1771,7 @@ input update_fund_input {
   created_at: Date
   updated_at: Date
   vintage: Int
+  fund_reports: [update_fund_report_input]
 }
 
 input update_fund_report_input {
@@ -1705,6 +1790,7 @@ input update_fund_report_input {
   dpi: Float
   created_at: Date
   updated_at: Date
+  company_reports: [update_company_report_input]
 }
 
 input update_organizations_input {
@@ -1712,6 +1798,7 @@ input update_organizations_input {
   name: String
   created_at: Date
   updated_at: Date
+  fund_reports: [update_fund_report_input]
 }
 
 type version_company {
@@ -1721,6 +1808,7 @@ type version_company {
   updated_at: Date
   geography: String
   sector: String
+  company_reports: JSON
 }
 
 type version_company_report {
@@ -1753,6 +1841,7 @@ type version_fund {
   created_at: Date
   updated_at: Date
   vintage: Int
+  fund_reports: JSON
 }
 
 type version_fund_report {
@@ -1771,6 +1860,7 @@ type version_fund_report {
   dpi: Float
   created_at: Date
   updated_at: Date
+  company_reports: JSON
 }
 
 type version_organizations {
@@ -1778,5 +1868,6 @@ type version_organizations {
   name: String
   created_at: Date
   updated_at: Date
+  fund_reports: JSON
 }
 
