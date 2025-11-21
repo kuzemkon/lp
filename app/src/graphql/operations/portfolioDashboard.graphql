@@ -15,9 +15,26 @@ query PortfolioDashboard(
       net_irr
     }
   }
-  fundsTotal: fund_aggregated {
-    count {
-      id
+  fundMetricsTimeline: fund_report_aggregated(
+    filter: $fundReportFilter
+    groupBy: ["report_date"]
+    sort: ["-report_date"]
+    limit: 2
+  ) {
+    group
+    sum {
+      capital_called
+      realized_value
+      total_value
+    }
+    avg {
+      moic
+      net_irr
+    }
+  }
+  fundsTotal: fund_report_aggregated(filter: $fundReportFilter) {
+    countDistinct {
+      fund_id
     }
   }
   latestReports: fund_report(

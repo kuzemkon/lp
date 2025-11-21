@@ -9,6 +9,7 @@ interface KpiCardProps {
   variant?: 'currency' | 'number' | 'percent' | 'text';
   changeLabel?: string;
   changeValue?: number | null;
+  changeTone?: 'trend' | 'muted';
   isLoading?: boolean;
   placeholder?: string;
 }
@@ -40,28 +41,37 @@ const KpiCard = ({
   variant = 'currency',
   changeLabel,
   changeValue,
+  changeTone = 'trend',
   placeholder,
 }: KpiCardProps) => {
   const formattedValue = placeholder ?? formatByVariant(value, variant);
-  const hasChange = changeValue !== undefined && changeValue !== null && !Number.isNaN(changeValue);
+  const hasChangeValue = changeValue !== undefined && changeValue !== null && !Number.isNaN(changeValue);
+  const shouldRenderChange = Boolean(changeLabel) || hasChangeValue;
   const isPositive = (changeValue ?? 0) >= 0;
+  const computedLabel = changeTone === 'trend'
+    ? changeLabel ?? (hasChangeValue ? `${isPositive ? '+' : ''}${formatNumber(changeValue)}` : undefined)
+    : changeLabel ?? undefined;
 
   return (
-    <SurfaceCard className="h-full min-h-[150px] p-6">
-      <div className="flex items-start justify-between gap-4">
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-graphite-500">{title}</p>
-          <p className="text-3xl font-semibold text-graphite-700">{formattedValue}</p>
+    <SurfaceCard className="h-full p-6">
+      <div>
+        <div className="space-y-1">
+          <p className="text-base font-semibold text-black capitalize">{title}</p>
+          <p className="text-3xl font-semibold text-black">{formattedValue}</p>
         </div>
-        {hasChange && (
+        {shouldRenderChange && computedLabel && (
           <div
             className={clsx(
-              'flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold',
-              isPositive ? 'bg-mint-50 text-mint-600' : 'bg-rose-50 text-rose-500'
+              'inline-flex items-center gap-1 text-sm font-light leading-none mt-1',
+              changeTone === 'muted'
+                ? 'text-graphite-500'
+                : isPositive
+                  ? 'text-mint-600'
+                  : 'text-rose-500'
             )}
           >
-            {isPositive ? <ArrowUpIcon /> : <ArrowDownIcon />}
-            {changeLabel ?? `${isPositive ? '+' : ''}${formatNumber(changeValue)}`}
+            {changeTone === 'trend' && hasChangeValue && (isPositive ? <ArrowUpIcon /> : <ArrowDownIcon />)}
+            {computedLabel}
           </div>
         )}
       </div>

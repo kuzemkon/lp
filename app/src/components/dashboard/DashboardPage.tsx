@@ -11,7 +11,7 @@ import SkeletonCard from './widgets/SkeletonCard';
 import Chip from '../ui/Chip';
 import SurfaceCard from '../ui/SurfaceCard';
 import { useDashboardFilters } from './filters/useDashboardFilters';
-import { formatCompactCurrency, formatCurrency, formatNumber } from './utils/formatters';
+import { formatCompactCurrency, formatNumber } from './utils/formatters';
 
 const buildDistribution = <T,>(
   items: readonly T[] | null | undefined,
@@ -67,7 +67,6 @@ const DashboardPage = () => {
     clearFilters,
     fundReportFilter,
     companyReportFilter,
-    fundFilter,
   } = useDashboardFilters();
 
   const {
@@ -91,7 +90,7 @@ const DashboardPage = () => {
   });
 
   const aggregated = metricData?.fundMetrics?.[0];
-  const fundsTotal = metricData?.fundsTotal?.[0]?.count?.id ?? 0;
+  const fundsTotal = metricData?.fundsTotal?.[0]?.countDistinct?.fund_id ?? 0;
   const latest = metricData?.latestReports?.[0];
   const previous = metricData?.latestReports?.[1];
 
@@ -106,27 +105,85 @@ const DashboardPage = () => {
   const irrFromFlows = deriveIrr(metricData?.cashFlows ?? []);
   const irrValue = irrFromAvg ?? irrFromFlows ?? null;
 
-  const valueDelta = latest && previous ? (latest.total_value ?? 0) - (previous.total_value ?? 0) : null;
-  const valueDeltaPercent = latest && previous && previous.total_value
-    ? (valueDelta ?? 0) / previous.total_value
-    : null;
+  const timelineLatest = metricData?.fundMetricsTimeline?.[0];
+  const timelinePrevious = metricData?.fundMetricsTimeline?.[1];
+
+const getSum = (entry?: (typeof timelineLatest)) => ({
+  total: entry?.sum?.total_value ?? null,
+  capital: entry?.sum?.capital_called ?? null,
+  distributions: entry?.sum?.realized_value ?? null,
+  moic: entry?.avg?.moic ?? null,
+  irr: entry?.avg?.net_irr ?? null,
+});
+
+const timelineLatestValues = getSum(timelineLatest);
+const timelinePreviousValues = getSum(timelinePrevious);
+
+  const computeDelta = (latestValue: number | null, previousValue: number | null) => {
+    if (latestValue === null || latestValue === undefined) return null;
+    if (previousValue === null || previousValue === undefined) return null;
+    return latestValue - previousValue;
+  };
+
+  const computePercentDelta = (latestValue: number | null, previousValue: number | null) => {
+    const delta = computeDelta(latestValue, previousValue);
+    if (delta === null || !previousValue) return null;
+    return delta / previousValue;
+  };
+
+  const valueDelta =
+    computeDelta(timelineLatestValues.total, timelinePreviousValues.total) ??
+    (latest && previous ? (latest.total_value ?? 0) - (previous.total_value ?? 0) : null);
+  const valueDeltaPercent =
+    computePercentDelta(timelineLatestValues.total, timelinePreviousValues.total) ??
+    (latest && previous && previous.total_value
+      ? ((latest.total_value ?? 0) - (previous.total_value ?? 0)) / previous.total_value
+      : null);
+
+  const capitalDelta =
+    computeDelta(timelineLatestValues.capital, timelinePreviousValues.capital) ??
+    (latest && previous ? (latest.capital_called ?? 0) - (previous.capital_called ?? 0) : null);
+  const distributionsDelta =
+    computeDelta(timelineLatestValues.distributions, timelinePreviousValues.distributions) ??
+    (latest && previous ? (latest.realized_value ?? 0) - (previous.realized_value ?? 0) : null);
+const moicDelta =
+  computeDelta(timelineLatestValues.moic, timelinePreviousValues.moic) ??
+  (latest && previous ? (latest.moic ?? 0) - (previous.moic ?? 0) : null);
+const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.irr);
 
   const fundsDelta = latest && previous ? (latest.num_investments ?? 0) - (previous.num_investments ?? 0) : null;
-  const capitalDelta = latest && previous ? (latest.capital_called ?? 0) - (previous.capital_called ?? 0) : null;
-  const distributionsDelta =
-    latest && previous ? (latest.realized_value ?? 0) - (previous.realized_value ?? 0) : null;
-  const moicDelta = latest && previous ? (latest.moic ?? 0) - (previous.moic ?? 0) : null;
 
   const valueDeltaPercentLabel =
     valueDeltaPercent !== null
-      ? `${formatNumber(valueDeltaPercent * 100)}% vs last report`
+      ? `${formatNumber(valueDeltaPercent * 100)}% vs last quarter`
       : undefined;
 
   const compactTotalValue = totalValue === null ? null : formatCompactCurrency(totalValue);
   const compactCapitalCalled = capitalCalled === null ? null : formatCompactCurrency(capitalCalled);
   const compactDistributions = distributions === null ? null : formatCompactCurrency(distributions);
+  const formatCompactDelta = (value: number | null) => {
+    if (value === null || value === undefined || Number.isNaN(value)) return undefined;
+    const absolute = Math.abs(value);
+    const prefix = value >= 0 ? '+' : '-';
+    return `${prefix}${formatCompactCurrency(absolute)}`;
+  };
+  const capitalReturnedLabel = compactDistributions ? `Capital Returned: ${compactDistributions}` : undefined;
 
   const kpiCards = [
+    {
+      title: 'Total portfolio value',
+      value: compactTotalValue,
+      variant: 'text' as const,
+      changeLabel: valueDeltaPercentLabel,
+      changeValue: valueDeltaPercent,
+    },
+    {
+      title: 'Net multiple',
+      value: moic !== null ? `${formatNumber(moic)}x` : null,
+      variant: 'text' as const,
+      changeLabel: capitalReturnedLabel,
+      changeTone: 'muted' as const,
+    },
     {
       title: 'Number of funds',
       value: fundsTotal,
@@ -135,43 +192,29 @@ const DashboardPage = () => {
       changeValue: fundsDelta,
     },
     {
-      title: 'Portfolio value (total)',
-      value: compactTotalValue,
-      variant: 'text' as const,
-      changeLabel: valueDeltaPercentLabel,
-      changeValue: valueDeltaPercent,
-    },
-    {
       title: 'Capital called (invested)',
       value: compactCapitalCalled,
       variant: 'text' as const,
       changeValue: capitalDelta,
-      changeLabel:
-        capitalDelta !== null
-          ? `${capitalDelta >= 0 ? '+' : ''}${formatCurrency(capitalDelta)}`
-          : undefined,
+      changeLabel: formatCompactDelta(capitalDelta),
     },
     {
       title: 'Distributions',
       value: compactDistributions,
       variant: 'text' as const,
       changeValue: distributionsDelta,
-      changeLabel:
-        distributionsDelta !== null
-          ? `${distributionsDelta >= 0 ? '+' : ''}${formatCurrency(distributionsDelta)}`
-          : undefined,
-    },
-    {
-      title: 'Portfolio MOIC (net)',
-      value: moic,
-      variant: 'number' as const,
-      changeValue: moicDelta,
+      changeLabel: formatCompactDelta(distributionsDelta),
     },
     {
       title: 'Portfolio IRR',
       value: irrValue,
       variant: 'percent' as const,
       placeholder: irrValue === null ? 'Coming soon' : undefined,
+      changeLabel:
+        irrDelta !== null
+          ? `${formatNumber((irrDelta ?? 0) * 100)}% vs last quarter`
+          : undefined,
+      changeValue: irrDelta,
     },
   ];
 

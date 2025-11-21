@@ -3141,7 +3141,7 @@ export type PortfolioDashboardQueryVariables = Exact<{
 }>;
 
 
-export type PortfolioDashboardQuery = { __typename: 'Query', fundMetrics: Array<{ __typename: 'fund_report_aggregated', countAll?: number | null, sum?: { __typename: 'fund_report_aggregated_fields', capital_called?: number | null, realized_value?: number | null, unrealized_value?: number | null, total_value?: number | null } | null, avg?: { __typename: 'fund_report_aggregated_fields', moic?: number | null, net_irr?: number | null } | null }>, fundsTotal: Array<{ __typename: 'fund_aggregated', count?: { __typename: 'fund_aggregated_count', id?: number | null } | null }>, latestReports: Array<{ __typename: 'fund_report', id: string, report_date: string, num_investments?: number | null, total_value?: number | null, capital_called?: number | null, realized_value?: number | null, moic?: number | null }>, cashFlows: Array<{ __typename: 'company_report', id: string, report_date: string, invested_capital?: number | null, realized_value?: number | null, unrealized_value?: number | null }> };
+export type PortfolioDashboardQuery = { __typename: 'Query', fundMetrics: Array<{ __typename: 'fund_report_aggregated', countAll?: number | null, sum?: { __typename: 'fund_report_aggregated_fields', capital_called?: number | null, realized_value?: number | null, unrealized_value?: number | null, total_value?: number | null } | null, avg?: { __typename: 'fund_report_aggregated_fields', moic?: number | null, net_irr?: number | null } | null }>, fundMetricsTimeline: Array<{ __typename: 'fund_report_aggregated', group?: Record<string, unknown> | null, sum?: { __typename: 'fund_report_aggregated_fields', capital_called?: number | null, realized_value?: number | null, total_value?: number | null } | null, avg?: { __typename: 'fund_report_aggregated_fields', moic?: number | null, net_irr?: number | null } | null }>, fundsTotal: Array<{ __typename: 'fund_report_aggregated', countDistinct?: { __typename: 'fund_report_aggregated_count', fund_id?: number | null } | null }>, latestReports: Array<{ __typename: 'fund_report', id: string, report_date: string, num_investments?: number | null, total_value?: number | null, capital_called?: number | null, realized_value?: number | null, moic?: number | null }>, cashFlows: Array<{ __typename: 'company_report', id: string, report_date: string, invested_capital?: number | null, realized_value?: number | null, unrealized_value?: number | null }> };
 
 
 export const DashboardFiltersDocument = gql`
@@ -3292,9 +3292,26 @@ export const PortfolioDashboardDocument = gql`
       net_irr
     }
   }
-  fundsTotal: fund_aggregated {
-    count {
-      id
+  fundMetricsTimeline: fund_report_aggregated(
+    filter: $fundReportFilter
+    groupBy: ["report_date"]
+    sort: ["-report_date"]
+    limit: 2
+  ) {
+    group
+    sum {
+      capital_called
+      realized_value
+      total_value
+    }
+    avg {
+      moic
+      net_irr
+    }
+  }
+  fundsTotal: fund_report_aggregated(filter: $fundReportFilter) {
+    countDistinct {
+      fund_id
     }
   }
   latestReports: fund_report(
