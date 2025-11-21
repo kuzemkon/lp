@@ -9,6 +9,7 @@ import { DashboardFilters, useDashboardFilterContext } from './DashboardFilterCo
 
 type BuildOptions = {
   includeFundIdentity?: boolean;
+  includeCompanyReports?: boolean;
 };
 
 const hasKeys = (input: Record<string, unknown> | undefined | null) =>
@@ -40,9 +41,12 @@ const buildCompanyReportsFilter = (
 
 const buildFundReportFilter = (
   filters: DashboardFilters,
-  options: BuildOptions = { includeFundIdentity: true }
+  options: BuildOptions = { includeFundIdentity: true, includeCompanyReports: true }
 ): Fund_Report_Filter | undefined => {
-  const { includeFundIdentity = true } = options;
+  const {
+    includeFundIdentity = true,
+    includeCompanyReports = true,
+  } = options;
 
   const filter: Fund_Report_Filter = {};
   const fundFilter: Fund_Filter = {};
@@ -65,7 +69,7 @@ const buildFundReportFilter = (
     };
   }
 
-  const companyReports = buildCompanyReportsFilter(filters);
+  const companyReports = includeCompanyReports ? buildCompanyReportsFilter(filters) : undefined;
   if (companyReports) {
     filter.company_reports = companyReports;
   }
@@ -90,7 +94,9 @@ const buildCompanyReportFilter = (
     }
   }
 
-  const fundReportFilter = buildFundReportFilter(filters);
+  const fundReportFilter = buildFundReportFilter(filters, {
+    includeCompanyReports: false,
+  });
   if (fundReportFilter) {
     filter.fund_report_id = fundReportFilter;
   }

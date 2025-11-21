@@ -17,19 +17,6 @@ interface PieChartCardProps {
     onSelect?: (name: string) => void;
 }
 
-// const chartShades = [
-//     '#165E2F',
-//     '#32D96C',
-//     '#114A25',
-//     '#2DC462',
-//     '#15592D',
-//     '#28B058',
-//     '#1F8744',
-//     '#37ED76',
-//     '#0C361B',
-//     '#249C4E',
-// ];
-
 const chartShades = [
     '#154024',
     '#3C8C58',
@@ -91,7 +78,7 @@ const PieChartCard = ({title, data = [], loading, activeName, onSelect}: PieChar
   return (
     <SurfaceCard className="h-full px-5 py-5">
       <h3 className="text-lg font-semibold text-graphite-700">{title}</h3>
-      <div className="mt-4 space-y-4">
+      <div className="mt-0 space-y-0">
         <div className="relative flex w-full justify-center">
                     <div className="h-56 w-full max-w-xl">
                         <ResponsiveContainer width="100%" height="100%">
@@ -117,24 +104,26 @@ const PieChartCard = ({title, data = [], loading, activeName, onSelect}: PieChar
                                         `${percentFormatter.format(totalValue > 0 ? (Number(value) / totalValue) * 100 : 0)}%`,
                                         name,
                                     ]}
+                                    wrapperStyle={{ zIndex: 30 }}
+                                    contentStyle={{ borderRadius: '3px' }}
                                 />
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
                     <div
-                        className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center text-black">
+                        className="pointer-events-none absolute inset-0 z-0 flex flex-col items-center justify-center text-center text-black">
                         <p className="text-2xl font-semibold">{compactCurrency(totalValue)}</p>
                         <p className="text-sm font-medium text-black/60">Total Value</p>
                     </div>
                 </div>
-        <ul className="space-y-0 px-1 pb-1">
+        <ul className="space-y-0 px-0 pb-0">
           {data.map((item, index) => (
                         <li key={item.name}>
                             <button
                                 type="button"
                                 onClick={() => onSelect?.(item.name)}
-                                className={clsx(
-                                    'flex w-full items-center justify-between rounded-xl border px-3 py-0.5 text-left transition',
+                className={clsx(
+                  'flex w-full items-center justify-between rounded-md border px-1 py-0.5 text-left transition',
                                     activeName === item.name
                                         ? 'border-mint-500 bg-mint-50 text-graphite-800'
                                         : 'border-transparent text-graphite-500 hover:border-graphite-200'
