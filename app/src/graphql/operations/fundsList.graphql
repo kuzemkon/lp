@@ -1,0 +1,46 @@
+query FundsList(
+  $fundReportFilter: fund_report_filter
+  $fundFilter: fund_filter
+  $limit: Int = 10
+  $offset: Int = 0
+) {
+  funds: fund(
+    filter: $fundFilter
+    limit: $limit
+    offset: $offset
+    sort: ["name"]
+  ) {
+    id
+    name
+    vintage
+    fund_reports(filter: $fundReportFilter, sort: ["-report_date"], limit: 1) {
+      id
+      report_date
+      fund_size
+      num_investments
+      capital_called
+      unrealized_value
+      realized_value
+      total_value
+      moic
+      net_irr
+      dpi
+      organization_id {
+        id
+        name
+      }
+      company_reports(limit: 3) {
+        id
+        company_id {
+          id
+          name
+          geography
+          sector
+        }
+      }
+    }
+  }
+  total: fund_aggregated(filter: $fundFilter) {
+    countAll
+  }
+}

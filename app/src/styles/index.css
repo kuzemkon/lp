@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #0f172a;
+  --canvas: #f5f7fb;
+  --surface: #ffffff;
+  --border-subtle: #e2e8f0;
+}
+
+body {
+  background-color: var(--canvas);
+  @apply text-graphite-700 antialiased;
+  min-height: 100vh;
+}
+
+.surface-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 7px;
+}
+
+.tremor-Card-root {
+  @apply surface-card !p-6;
+}
+
+.tremor-Title-root {
+  @apply text-graphite-700 font-semibold;
+}
+
+.tremor-Text-root,
+.tremor-Metric-root {
+  @apply text-graphite-600;
+}
+
+.tremor-DonutChart-label {
+  @apply text-graphite-500;
+}
+
+.filter-badge {
+  @apply inline-flex items-center gap-2 rounded-full bg-graphite-100 px-4 py-1 text-sm font-medium text-graphite-600;
+}

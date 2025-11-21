@@ -1,0 +1,47 @@
+query PortfolioDashboard(
+  $fundReportFilter: fund_report_filter
+  $companyReportFilter: company_report_filter
+) {
+  fundMetrics: fund_report_aggregated(filter: $fundReportFilter) {
+    countAll
+    sum {
+      capital_called
+      realized_value
+      unrealized_value
+      total_value
+    }
+    avg {
+      moic
+      net_irr
+    }
+  }
+  fundsTotal: fund_aggregated {
+    count {
+      id
+    }
+  }
+  latestReports: fund_report(
+    filter: $fundReportFilter
+    sort: ["-report_date"]
+    limit: 2
+  ) {
+    id
+    report_date
+    num_investments
+    total_value
+    capital_called
+    realized_value
+    moic
+  }
+  cashFlows: company_report(
+    filter: $companyReportFilter
+    sort: ["report_date"]
+    limit: 200
+  ) {
+    id
+    report_date
+    invested_capital
+    realized_value
+    unrealized_value
+  }
+}

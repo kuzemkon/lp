@@ -1,0 +1,32 @@
+query DashboardFilters(
+  $fundReportFilter: fund_report_filter
+  $companyReportFilter: company_report_filter
+) {
+  companyReports: company_report(
+    filter: $companyReportFilter
+    limit: 500
+  ) {
+    id
+    invested_capital
+    company_id {
+      id
+      geography
+      sector
+    }
+  }
+  fundReports: fund_report(
+    filter: $fundReportFilter
+    limit: 500
+  ) {
+    id
+    capital_called
+    fund_id {
+      id
+      vintage
+    }
+    organization_id {
+      id
+      name
+    }
+  }
+}
