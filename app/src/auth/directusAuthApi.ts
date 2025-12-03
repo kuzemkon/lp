@@ -1,4 +1,5 @@
 import type { AuthState } from './authStore';
+import { DIRECTUS_REST_URL } from '../directus/config';
 
 interface DirectusAuthResponse {
   data: {
@@ -9,13 +10,7 @@ interface DirectusAuthResponse {
   };
 }
 
-const rawBaseUrl = import.meta.env.VITE_DIRECTUS_REST_URL;
-
-if (!rawBaseUrl) {
-  throw new Error('VITE_DIRECTUS_REST_URL is missing');
-}
-
-const baseUrl = rawBaseUrl.replace(/\/$/, '');
+const baseUrl = DIRECTUS_REST_URL;
 const DEFAULT_REFRESH_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 
 const deriveExpirationFromNumber = (value: number, fieldName: string): number => {

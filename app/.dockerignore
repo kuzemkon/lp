@@ -6,3 +6,4 @@ Dockerfile
 Dockerfile.*
 Caddyfile
 *.log
+.env

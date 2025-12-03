@@ -40,7 +40,7 @@ services:
       - ./:/data
 
   app:
-    image: lp-app
+    image: lp-app:latest
     restart: unless-stopped
     depends_on:
       - directus

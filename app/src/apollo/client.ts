@@ -1,13 +1,7 @@
 import {ApolloClient, HttpLink, InMemoryCache} from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
 import {ensureValidAccessToken} from '../auth/session';
-
-const uri = import.meta.env.VITE_DIRECTUS_GRAPHQL_URL;
-
-if (!uri) {
-    // Fail fast so engineers wire up the environment variables at runtime
-    throw new Error('VITE_DIRECTUS_GRAPHQL_URL is missing');
-}
+import {DIRECTUS_GRAPHQL_URL} from '../directus/config';
 
 const authLink = setContext(async (_, {headers}) => {
     const token = await ensureValidAccessToken();
@@ -36,7 +30,7 @@ const authLink = setContext(async (_, {headers}) => {
     };
 });
 
-const httpLink = new HttpLink({uri});
+const httpLink = new HttpLink({uri: DIRECTUS_GRAPHQL_URL});
 
 export const client = new ApolloClient({
     link: authLink.concat(httpLink),
