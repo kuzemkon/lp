@@ -1,0 +1,6 @@
+creation_rules:
+  - path_regex: ^secrets\.tfvars$
+    key_groups:
+      - pgp:
+          # Yurii
+          - "0434C38725AF1ECC83AA762C350BE0C7F83D2ED0"

@@ -39,5 +39,13 @@ services:
       - ./uploads:/directus/uploads
       - ./:/data
 
+  app:
+    image: lp-app
+    restart: unless-stopped
+    depends_on:
+      - directus
+    ports:
+      - "80:80"
+
 volumes:
   pgdata:
