@@ -3295,8 +3295,6 @@ export const PortfolioDashboardDocument = gql`
   fundMetricsTimeline: fund_report_aggregated(
     filter: $fundReportFilter
     groupBy: ["report_date"]
-    sort: ["-report_date"]
-    limit: 2
   ) {
     group
     sum {

@@ -94,6 +94,23 @@ const DashboardPage = () => {
   const latest = metricData?.latestReports?.[0];
   const previous = metricData?.latestReports?.[1];
 
+  const timelineEntries = useMemo(() => {
+    const entries = metricData?.fundMetricsTimeline ?? [];
+    const getTimestamp = (entry?: (typeof entries)[number]) => {
+      const rawGroup = entry?.group as Record<string, unknown> | null | undefined;
+      const rawValue = rawGroup?.['report_date'];
+
+      if (typeof rawValue !== 'string') {
+        return 0;
+      }
+
+      const time = Date.parse(rawValue);
+      return Number.isNaN(time) ? 0 : time;
+    };
+
+    return [...entries].sort((a, b) => getTimestamp(b) - getTimestamp(a));
+  }, [metricData?.fundMetricsTimeline]);
+
   const totals = aggregated?.sum;
   const averages = aggregated?.avg;
 
@@ -105,8 +122,8 @@ const DashboardPage = () => {
   const irrFromFlows = deriveIrr(metricData?.cashFlows ?? []);
   const irrValue = irrFromAvg ?? irrFromFlows ?? null;
 
-  const timelineLatest = metricData?.fundMetricsTimeline?.[0];
-  const timelinePrevious = metricData?.fundMetricsTimeline?.[1];
+  const timelineLatest = timelineEntries[0];
+  const timelinePrevious = timelineEntries[1];
 
 const getSum = (entry?: (typeof timelineLatest)) => ({
   total: entry?.sum?.total_value ?? null,

@@ -6,6 +6,7 @@ import { RouterProvider } from 'react-router-dom';
 import { client } from './apollo/client';
 import router from './router';
 import './styles/index.css';
+import { AuthProvider } from './auth/AuthProvider';
 
 const container = document.getElementById('root');
 
@@ -15,8 +16,10 @@ if (!container) {
 
 createRoot(container).render(
   <StrictMode>
-    <ApolloProvider client={client}>
-      <RouterProvider router={router} />
-    </ApolloProvider>
+    <AuthProvider>
+      <ApolloProvider client={client}>
+        <RouterProvider router={router} />
+      </ApolloProvider>
+    </AuthProvider>
   </StrictMode>
 );
