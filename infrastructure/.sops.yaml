@@ -4,3 +4,8 @@ creation_rules:
       - pgp:
           # Yurii
           - "0434C38725AF1ECC83AA762C350BE0C7F83D2ED0"
+  - path_regex: ^ssh-private-key\.pem$
+    key_groups:
+      - pgp:
+          # Yurii
+          - "0434C38725AF1ECC83AA762C350BE0C7F83D2ED0"
