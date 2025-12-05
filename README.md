@@ -7,8 +7,7 @@ npx get-graphql-schema http://localhost:8055/graphql \
   > schema.graphql
 ```
 
-Ansible deploy:
-
+Start docker compose
 ```shell
-ansible-playbook -i ansible/hosts.ini ansible/deploy.yml
+docker compose --env-file env/compose.env --env-file=<(sops -d env/secrets.env) up
 ```

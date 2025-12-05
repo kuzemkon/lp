@@ -40,12 +40,24 @@ services:
       - ./:/data
 
   app:
-    image: lp-app:latest
+    build:
+      context: ./app
+      dockerfile: ./deployment/Dockerfile
+      args:
+        VITE_DIRECTUS_URL: "https://api-fm.kuzemkon.com"
     restart: unless-stopped
     depends_on:
       - directus
     ports:
-      - "80:80"
+      - "8184:80"
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - app
 
 volumes:
   pgdata:
