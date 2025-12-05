@@ -9,5 +9,5 @@ npx get-graphql-schema http://localhost:8055/graphql \
 
 Start docker compose
 ```shell
-docker compose --env-file env/compose.env --env-file=<(sops -d env/secrets.env) up
+sops exec-env config/secrets.env 'docker compose --env-file config/config.env up'
 ```

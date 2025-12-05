@@ -1,5 +1,5 @@
 creation_rules:
-  - path_regex: ^env/secrets\.env$
+  - path_regex: ^config/secrets\.env$
     key_groups:
       - pgp:
           # Yurii

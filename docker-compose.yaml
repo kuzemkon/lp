@@ -13,6 +13,18 @@ services:
     ports:
       - "5432:5432"
 
+  pg_backup:
+    image: kartoza/pg-backup:17-3.5  # match your Postgres version
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: directus
+      POSTGRES_PASS: directus
+      CRON_SCHEDULE: "0 11 * * *"   # daily at 11:00
+    volumes:
+      - /Users/kuzemkon/Documents/lp-backups:/backups
+
   directus:
     image: directus/directus:11.13.0
     container_name: directus_app
