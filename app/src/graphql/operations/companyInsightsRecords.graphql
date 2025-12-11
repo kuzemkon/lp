@@ -1,0 +1,31 @@
+query CompanyInsightsRecords($filter: company_report_filter, $limit: Int = 500) {
+  companyReports: company_report(filter: $filter, limit: $limit, sort: ["-report_date"]) {
+    id
+    report_date
+    investment_date
+    invested_capital
+    total_value
+    irr
+    revenue
+    ebitda
+    realized_value
+    unrealized_value
+    enterprise_value
+    equity_value
+    debt
+    valuation_multiple
+    status
+    thesis_commentary
+    company_id {
+      id
+      name
+      geography
+      sector
+    }
+    fund_report_id {
+      organization_id {
+        name
+      }
+    }
+  }
+}

@@ -3117,6 +3117,22 @@ export type Version_Organizations = {
   updated_at?: Maybe<Scalars['Date']['output']>;
 };
 
+export type CompanyInsightsAggregationQueryVariables = Exact<{
+  filter?: InputMaybe<Company_Report_Filter>;
+  groupBy?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type CompanyInsightsAggregationQuery = { __typename: 'Query', companyAggregation: Array<{ __typename: 'company_report_aggregated', group?: Record<string, unknown> | null, countAll?: number | null, avg?: { __typename: 'company_report_aggregated_fields', irr?: number | null, invested_capital?: number | null, total_value?: number | null, revenue?: number | null, ebitda?: number | null, enterprise_value?: number | null, equity_value?: number | null, debt?: number | null, valuation_multiple?: number | null } | null, sum?: { __typename: 'company_report_aggregated_fields', invested_capital?: number | null, total_value?: number | null, revenue?: number | null, ebitda?: number | null, realized_value?: number | null, unrealized_value?: number | null, enterprise_value?: number | null, equity_value?: number | null, debt?: number | null } | null, min?: { __typename: 'company_report_aggregated_fields', invested_capital?: number | null, total_value?: number | null, revenue?: number | null, ebitda?: number | null, enterprise_value?: number | null, equity_value?: number | null, debt?: number | null, valuation_multiple?: number | null, irr?: number | null, realized_value?: number | null, unrealized_value?: number | null } | null, max?: { __typename: 'company_report_aggregated_fields', invested_capital?: number | null, total_value?: number | null, revenue?: number | null, ebitda?: number | null, enterprise_value?: number | null, equity_value?: number | null, debt?: number | null, valuation_multiple?: number | null, irr?: number | null, realized_value?: number | null, unrealized_value?: number | null } | null }> };
+
+export type CompanyInsightsRecordsQueryVariables = Exact<{
+  filter?: InputMaybe<Company_Report_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type CompanyInsightsRecordsQuery = { __typename: 'Query', companyReports: Array<{ __typename: 'company_report', id: string, report_date: string, investment_date?: string | null, invested_capital?: number | null, total_value?: number | null, irr?: number | null, revenue?: number | null, ebitda?: number | null, realized_value?: number | null, unrealized_value?: number | null, enterprise_value?: number | null, equity_value?: number | null, debt?: number | null, valuation_multiple?: number | null, status?: string | null, thesis_commentary?: string | null, company_id?: { __typename: 'company', id: string, name: string, geography?: string | null, sector?: string | null } | null, fund_report_id?: { __typename: 'fund_report', organization_id?: { __typename: 'organizations', name: string } | null } | null }> };
+
 export type DashboardFiltersQueryVariables = Exact<{
   fundReportFilter?: InputMaybe<Fund_Report_Filter>;
   companyReportFilter?: InputMaybe<Company_Report_Filter>;
@@ -3133,6 +3149,22 @@ export type FundCompaniesQueryVariables = Exact<{
 
 
 export type FundCompaniesQuery = { __typename: 'Query', fund?: { __typename: 'fund', id: string, name: string } | null, latestReport: Array<{ __typename: 'fund_report', id: string, report_date: string, company_reports?: Array<{ __typename: 'company_report', id: string, report_date: string, invested_capital?: number | null, unrealized_value?: number | null, realized_value?: number | null, total_value?: number | null, irr?: number | null, company_id?: { __typename: 'company', id: string, name: string, geography?: string | null, sector?: string | null } | null } | null> | null, company_reports_func?: { __typename: 'count_functions', count?: number | null } | null }> };
+
+export type FundInsightsAggregationQueryVariables = Exact<{
+  filter?: InputMaybe<Fund_Report_Filter>;
+  groupBy?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type FundInsightsAggregationQuery = { __typename: 'Query', fundAggregation: Array<{ __typename: 'fund_report_aggregated', group?: Record<string, unknown> | null, countAll?: number | null, avg?: { __typename: 'fund_report_aggregated_fields', total_value?: number | null, capital_called?: number | null, realized_value?: number | null, unrealized_value?: number | null, moic?: number | null, net_irr?: number | null, fund_size?: number | null, num_investments?: number | null, dpi?: number | null } | null, sum?: { __typename: 'fund_report_aggregated_fields', total_value?: number | null, capital_called?: number | null, realized_value?: number | null, unrealized_value?: number | null, fund_size?: number | null, num_investments?: number | null } | null, min?: { __typename: 'fund_report_aggregated_fields', total_value?: number | null, capital_called?: number | null, realized_value?: number | null, unrealized_value?: number | null, moic?: number | null, net_irr?: number | null, fund_size?: number | null, num_investments?: number | null, dpi?: number | null } | null, max?: { __typename: 'fund_report_aggregated_fields', total_value?: number | null, capital_called?: number | null, realized_value?: number | null, unrealized_value?: number | null, moic?: number | null, net_irr?: number | null, fund_size?: number | null, num_investments?: number | null, dpi?: number | null } | null }> };
+
+export type FundInsightsRecordsQueryVariables = Exact<{
+  filter?: InputMaybe<Fund_Report_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type FundInsightsRecordsQuery = { __typename: 'Query', fundReports: Array<{ __typename: 'fund_report', id: string, report_date: string, capital_called?: number | null, realized_value?: number | null, unrealized_value?: number | null, total_value?: number | null, moic?: number | null, net_irr?: number | null, fund_size?: number | null, num_investments?: number | null, dpi?: number | null, fund_id?: { __typename: 'fund', id: string, name: string, vintage?: number | null } | null, organization_id?: { __typename: 'organizations', name: string } | null, company_reports?: Array<{ __typename: 'company_report', company_id?: { __typename: 'company', geography?: string | null, sector?: string | null } | null } | null> | null }> };
 
 export type FundsListQueryVariables = Exact<{
   fundReportFilter?: InputMaybe<Fund_Report_Filter>;
@@ -3160,6 +3192,170 @@ export type PortfolioDashboardQueryVariables = Exact<{
 export type PortfolioDashboardQuery = { __typename: 'Query', fundMetrics: Array<{ __typename: 'fund_report_aggregated', countAll?: number | null, sum?: { __typename: 'fund_report_aggregated_fields', capital_called?: number | null, realized_value?: number | null, unrealized_value?: number | null, total_value?: number | null } | null, avg?: { __typename: 'fund_report_aggregated_fields', moic?: number | null, net_irr?: number | null } | null }>, fundMetricsTimeline: Array<{ __typename: 'fund_report_aggregated', group?: Record<string, unknown> | null, sum?: { __typename: 'fund_report_aggregated_fields', capital_called?: number | null, realized_value?: number | null, total_value?: number | null } | null, avg?: { __typename: 'fund_report_aggregated_fields', moic?: number | null, net_irr?: number | null } | null }>, fundsTotal: Array<{ __typename: 'fund_report_aggregated', countDistinct?: { __typename: 'fund_report_aggregated_count', fund_id?: number | null } | null }>, latestReports: Array<{ __typename: 'fund_report', id: string, report_date: string, num_investments?: number | null, total_value?: number | null, capital_called?: number | null, realized_value?: number | null, moic?: number | null }>, cashFlows: Array<{ __typename: 'company_report', id: string, report_date: string, invested_capital?: number | null, realized_value?: number | null, unrealized_value?: number | null }> };
 
 
+export const CompanyInsightsAggregationDocument = gql`
+    query CompanyInsightsAggregation($filter: company_report_filter, $groupBy: [String!]) {
+  companyAggregation: company_report_aggregated(
+    filter: $filter
+    groupBy: $groupBy
+  ) {
+    group
+    countAll
+    avg {
+      irr
+      invested_capital
+      total_value
+      revenue
+      ebitda
+      enterprise_value
+      equity_value
+      debt
+      valuation_multiple
+    }
+    sum {
+      invested_capital
+      total_value
+      revenue
+      ebitda
+      realized_value
+      unrealized_value
+      enterprise_value
+      equity_value
+      debt
+    }
+    min {
+      invested_capital
+      total_value
+      revenue
+      ebitda
+      enterprise_value
+      equity_value
+      debt
+      valuation_multiple
+      irr
+      realized_value
+      unrealized_value
+    }
+    max {
+      invested_capital
+      total_value
+      revenue
+      ebitda
+      enterprise_value
+      equity_value
+      debt
+      valuation_multiple
+      irr
+      realized_value
+      unrealized_value
+    }
+  }
+}
+    `;
+
+/**
+ * __useCompanyInsightsAggregationQuery__
+ *
+ * To run a query within a React component, call `useCompanyInsightsAggregationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCompanyInsightsAggregationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCompanyInsightsAggregationQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      groupBy: // value for 'groupBy'
+ *   },
+ * });
+ */
+export function useCompanyInsightsAggregationQuery(baseOptions?: Apollo.QueryHookOptions<CompanyInsightsAggregationQuery, CompanyInsightsAggregationQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CompanyInsightsAggregationQuery, CompanyInsightsAggregationQueryVariables>(CompanyInsightsAggregationDocument, options);
+      }
+export function useCompanyInsightsAggregationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CompanyInsightsAggregationQuery, CompanyInsightsAggregationQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CompanyInsightsAggregationQuery, CompanyInsightsAggregationQueryVariables>(CompanyInsightsAggregationDocument, options);
+        }
+export function useCompanyInsightsAggregationSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CompanyInsightsAggregationQuery, CompanyInsightsAggregationQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CompanyInsightsAggregationQuery, CompanyInsightsAggregationQueryVariables>(CompanyInsightsAggregationDocument, options);
+        }
+export type CompanyInsightsAggregationQueryHookResult = ReturnType<typeof useCompanyInsightsAggregationQuery>;
+export type CompanyInsightsAggregationLazyQueryHookResult = ReturnType<typeof useCompanyInsightsAggregationLazyQuery>;
+export type CompanyInsightsAggregationSuspenseQueryHookResult = ReturnType<typeof useCompanyInsightsAggregationSuspenseQuery>;
+export type CompanyInsightsAggregationQueryResult = Apollo.QueryResult<CompanyInsightsAggregationQuery, CompanyInsightsAggregationQueryVariables>;
+export const CompanyInsightsRecordsDocument = gql`
+    query CompanyInsightsRecords($filter: company_report_filter, $limit: Int = 500) {
+  companyReports: company_report(
+    filter: $filter
+    limit: $limit
+    sort: ["-report_date"]
+  ) {
+    id
+    report_date
+    investment_date
+    invested_capital
+    total_value
+    irr
+    revenue
+    ebitda
+    realized_value
+    unrealized_value
+    enterprise_value
+    equity_value
+    debt
+    valuation_multiple
+    status
+    thesis_commentary
+    company_id {
+      id
+      name
+      geography
+      sector
+    }
+    fund_report_id {
+      organization_id {
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useCompanyInsightsRecordsQuery__
+ *
+ * To run a query within a React component, call `useCompanyInsightsRecordsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCompanyInsightsRecordsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCompanyInsightsRecordsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useCompanyInsightsRecordsQuery(baseOptions?: Apollo.QueryHookOptions<CompanyInsightsRecordsQuery, CompanyInsightsRecordsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CompanyInsightsRecordsQuery, CompanyInsightsRecordsQueryVariables>(CompanyInsightsRecordsDocument, options);
+      }
+export function useCompanyInsightsRecordsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CompanyInsightsRecordsQuery, CompanyInsightsRecordsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CompanyInsightsRecordsQuery, CompanyInsightsRecordsQueryVariables>(CompanyInsightsRecordsDocument, options);
+        }
+export function useCompanyInsightsRecordsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CompanyInsightsRecordsQuery, CompanyInsightsRecordsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CompanyInsightsRecordsQuery, CompanyInsightsRecordsQueryVariables>(CompanyInsightsRecordsDocument, options);
+        }
+export type CompanyInsightsRecordsQueryHookResult = ReturnType<typeof useCompanyInsightsRecordsQuery>;
+export type CompanyInsightsRecordsLazyQueryHookResult = ReturnType<typeof useCompanyInsightsRecordsLazyQuery>;
+export type CompanyInsightsRecordsSuspenseQueryHookResult = ReturnType<typeof useCompanyInsightsRecordsSuspenseQuery>;
+export type CompanyInsightsRecordsQueryResult = Apollo.QueryResult<CompanyInsightsRecordsQuery, CompanyInsightsRecordsQueryVariables>;
 export const DashboardFiltersDocument = gql`
     query DashboardFilters($fundReportFilter: fund_report_filter, $companyReportFilter: company_report_filter) {
   companyReports: company_report(filter: $companyReportFilter, limit: 500) {
@@ -3288,6 +3484,154 @@ export type FundCompaniesQueryHookResult = ReturnType<typeof useFundCompaniesQue
 export type FundCompaniesLazyQueryHookResult = ReturnType<typeof useFundCompaniesLazyQuery>;
 export type FundCompaniesSuspenseQueryHookResult = ReturnType<typeof useFundCompaniesSuspenseQuery>;
 export type FundCompaniesQueryResult = Apollo.QueryResult<FundCompaniesQuery, FundCompaniesQueryVariables>;
+export const FundInsightsAggregationDocument = gql`
+    query FundInsightsAggregation($filter: fund_report_filter, $groupBy: [String!]) {
+  fundAggregation: fund_report_aggregated(filter: $filter, groupBy: $groupBy) {
+    group
+    countAll
+    avg {
+      total_value
+      capital_called
+      realized_value
+      unrealized_value
+      moic
+      net_irr
+      fund_size
+      num_investments
+      dpi
+    }
+    sum {
+      total_value
+      capital_called
+      realized_value
+      unrealized_value
+      fund_size
+      num_investments
+    }
+    min {
+      total_value
+      capital_called
+      realized_value
+      unrealized_value
+      moic
+      net_irr
+      fund_size
+      num_investments
+      dpi
+    }
+    max {
+      total_value
+      capital_called
+      realized_value
+      unrealized_value
+      moic
+      net_irr
+      fund_size
+      num_investments
+      dpi
+    }
+  }
+}
+    `;
+
+/**
+ * __useFundInsightsAggregationQuery__
+ *
+ * To run a query within a React component, call `useFundInsightsAggregationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFundInsightsAggregationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFundInsightsAggregationQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      groupBy: // value for 'groupBy'
+ *   },
+ * });
+ */
+export function useFundInsightsAggregationQuery(baseOptions?: Apollo.QueryHookOptions<FundInsightsAggregationQuery, FundInsightsAggregationQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FundInsightsAggregationQuery, FundInsightsAggregationQueryVariables>(FundInsightsAggregationDocument, options);
+      }
+export function useFundInsightsAggregationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FundInsightsAggregationQuery, FundInsightsAggregationQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FundInsightsAggregationQuery, FundInsightsAggregationQueryVariables>(FundInsightsAggregationDocument, options);
+        }
+export function useFundInsightsAggregationSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FundInsightsAggregationQuery, FundInsightsAggregationQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FundInsightsAggregationQuery, FundInsightsAggregationQueryVariables>(FundInsightsAggregationDocument, options);
+        }
+export type FundInsightsAggregationQueryHookResult = ReturnType<typeof useFundInsightsAggregationQuery>;
+export type FundInsightsAggregationLazyQueryHookResult = ReturnType<typeof useFundInsightsAggregationLazyQuery>;
+export type FundInsightsAggregationSuspenseQueryHookResult = ReturnType<typeof useFundInsightsAggregationSuspenseQuery>;
+export type FundInsightsAggregationQueryResult = Apollo.QueryResult<FundInsightsAggregationQuery, FundInsightsAggregationQueryVariables>;
+export const FundInsightsRecordsDocument = gql`
+    query FundInsightsRecords($filter: fund_report_filter, $limit: Int = 500) {
+  fundReports: fund_report(filter: $filter, limit: $limit, sort: ["-report_date"]) {
+    id
+    report_date
+    capital_called
+    realized_value
+    unrealized_value
+    total_value
+    moic
+    net_irr
+    fund_size
+    num_investments
+    dpi
+    fund_id {
+      id
+      name
+      vintage
+    }
+    organization_id {
+      name
+    }
+    company_reports(limit: 1) {
+      company_id {
+        geography
+        sector
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useFundInsightsRecordsQuery__
+ *
+ * To run a query within a React component, call `useFundInsightsRecordsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFundInsightsRecordsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFundInsightsRecordsQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useFundInsightsRecordsQuery(baseOptions?: Apollo.QueryHookOptions<FundInsightsRecordsQuery, FundInsightsRecordsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FundInsightsRecordsQuery, FundInsightsRecordsQueryVariables>(FundInsightsRecordsDocument, options);
+      }
+export function useFundInsightsRecordsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FundInsightsRecordsQuery, FundInsightsRecordsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FundInsightsRecordsQuery, FundInsightsRecordsQueryVariables>(FundInsightsRecordsDocument, options);
+        }
+export function useFundInsightsRecordsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FundInsightsRecordsQuery, FundInsightsRecordsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FundInsightsRecordsQuery, FundInsightsRecordsQueryVariables>(FundInsightsRecordsDocument, options);
+        }
+export type FundInsightsRecordsQueryHookResult = ReturnType<typeof useFundInsightsRecordsQuery>;
+export type FundInsightsRecordsLazyQueryHookResult = ReturnType<typeof useFundInsightsRecordsLazyQuery>;
+export type FundInsightsRecordsSuspenseQueryHookResult = ReturnType<typeof useFundInsightsRecordsSuspenseQuery>;
+export type FundInsightsRecordsQueryResult = Apollo.QueryResult<FundInsightsRecordsQuery, FundInsightsRecordsQueryVariables>;
 export const FundsListDocument = gql`
     query FundsList($fundReportFilter: fund_report_filter, $fundFilter: fund_filter, $limit: Int = 10, $offset: Int = 0) {
   funds: fund(filter: $fundFilter, limit: $limit, offset: $offset, sort: ["name"]) {

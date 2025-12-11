@@ -1,0 +1,47 @@
+query FundInsightsAggregation($filter: fund_report_filter, $groupBy: [String!]) {
+  fundAggregation: fund_report_aggregated(filter: $filter, groupBy: $groupBy) {
+    group
+    countAll
+    avg {
+      total_value
+      capital_called
+      realized_value
+      unrealized_value
+      moic
+      net_irr
+      fund_size
+      num_investments
+      dpi
+    }
+    sum {
+      total_value
+      capital_called
+      realized_value
+      unrealized_value
+      fund_size
+      num_investments
+    }
+    min {
+      total_value
+      capital_called
+      realized_value
+      unrealized_value
+      moic
+      net_irr
+      fund_size
+      num_investments
+      dpi
+    }
+    max {
+      total_value
+      capital_called
+      realized_value
+      unrealized_value
+      moic
+      net_irr
+      fund_size
+      num_investments
+      dpi
+    }
+  }
+}

@@ -1,0 +1,29 @@
+query FundInsightsRecords($filter: fund_report_filter, $limit: Int = 500) {
+  fundReports: fund_report(filter: $filter, limit: $limit, sort: ["-report_date"]) {
+    id
+    report_date
+    capital_called
+    realized_value
+    unrealized_value
+    total_value
+    moic
+    net_irr
+    fund_size
+    num_investments
+    dpi
+    fund_id {
+      id
+      name
+      vintage
+    }
+    organization_id {
+      name
+    }
+    company_reports(limit: 1) {
+      company_id {
+        geography
+        sector
+      }
+    }
+  }
+}

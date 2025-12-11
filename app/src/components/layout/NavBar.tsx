@@ -20,15 +20,18 @@ const NavBar = ({ activePath }: NavBarProps) => {
       to: '/funds',
       isActive: activePath === '/funds' || /^\/funds\/(?!$)/.test(activePath),
     },
+    {
+      label: 'Insights',
+      to: '/insights',
+      isActive: activePath.startsWith('/insights'),
+    },
   ];
 
   return (
     <header className="w-full bg-[var(--surface)]">
       <div className="flex w-full flex-col items-start gap-4 px-0 pb-4 sm:flex-row sm:items-center sm:gap-6">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-mint-500 text-white text-lg font-semibold">
-            FV
-          </div>
+          <img src="/logo.png" alt="FundView" className="h-10 w-10" />
           <p className="text-xl font-bold leading-tight text-black">FundView</p>
         </div>
         <nav className="flex items-center gap-6 text-left text-base font-medium text-graphite-400 sm:ml-1.5 lg:ml-2">

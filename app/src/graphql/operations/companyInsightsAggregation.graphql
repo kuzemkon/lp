@@ -1,0 +1,54 @@
+query CompanyInsightsAggregation($filter: company_report_filter, $groupBy: [String!]) {
+  companyAggregation: company_report_aggregated(filter: $filter, groupBy: $groupBy) {
+    group
+    countAll
+    avg {
+      irr
+      invested_capital
+      total_value
+      revenue
+      ebitda
+      enterprise_value
+      equity_value
+      debt
+      valuation_multiple
+    }
+    sum {
+      invested_capital
+      total_value
+      revenue
+      ebitda
+      realized_value
+      unrealized_value
+      enterprise_value
+      equity_value
+      debt
+    }
+    min {
+      invested_capital
+      total_value
+      revenue
+      ebitda
+      enterprise_value
+      equity_value
+      debt
+      valuation_multiple
+      irr
+      realized_value
+      unrealized_value
+    }
+    max {
+      invested_capital
+      total_value
+      revenue
+      ebitda
+      enterprise_value
+      equity_value
+      debt
+      valuation_multiple
+      irr
+      realized_value
+      unrealized_value
+    }
+  }
+}

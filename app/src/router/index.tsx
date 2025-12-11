@@ -5,6 +5,7 @@ import FundsPage from '../components/funds/FundsPage';
 import FundCompaniesPage from '../components/funds/FundCompaniesPage';
 import PrivacyPolicyPage from '../components/legal/PrivacyPolicyPage';
 import TermsOfUsePage from '../components/legal/TermsOfUsePage';
+import PortfolioInsightsPage from '../components/insights/PortfolioInsightsPage';
 import MetricDetailPage from '../components/metrics/MetricDetailPage';
 import { DashboardFilterProvider } from '../components/dashboard/filters/DashboardFilterContext';
 import RequireAuth from '../components/auth/RequireAuth';
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: '/funds/:fundId',
         element: <FundCompaniesPage />,
+      },
+      {
+        path: '/insights',
+        element: <PortfolioInsightsPage />,
       },
       {
         path: '/metrics/:metricId',
