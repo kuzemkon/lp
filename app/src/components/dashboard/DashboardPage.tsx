@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@tremor/react';
 import {
   useDashboardFiltersQuery,
@@ -6,7 +7,6 @@ import {
 } from '../../graphql/generated';
 import KpiCard from './widgets/KpiCard';
 import PieChartCard from './widgets/PieChartCard';
-import FundsTable from './widgets/FundsTable';
 import SkeletonCard from './widgets/SkeletonCard';
 import Chip from '../ui/Chip';
 import SurfaceCard from '../ui/SurfaceCard';
@@ -60,6 +60,8 @@ const normalizePercentValue = (value?: number | null) => {
 };
 
 const DashboardPage = () => {
+  const navigate = useNavigate();
+
   const {
     filters,
     setFilter,
@@ -189,6 +191,7 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
   const kpiCards = [
     {
       title: 'Total portfolio value',
+      metricId: 'total-value',
       value: compactTotalValue,
       variant: 'text' as const,
       changeLabel: valueDeltaPercentLabel,
@@ -196,6 +199,7 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
     },
     {
       title: 'Net multiple',
+      metricId: 'net-multiple',
       value: moic !== null ? `${formatNumber(moic)}x` : null,
       variant: 'text' as const,
       changeLabel: capitalReturnedLabel,
@@ -203,6 +207,7 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
     },
     {
       title: 'Number of funds',
+      metricId: 'number-of-funds',
       value: fundsTotal,
       variant: 'number' as const,
       changeLabel: fundsDelta !== null ? `${fundsDelta >= 0 ? '+' : ''}${formatNumber(fundsDelta)} vs last report` : undefined,
@@ -210,6 +215,7 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
     },
     {
       title: 'Capital called (invested)',
+      metricId: 'capital-called',
       value: compactCapitalCalled,
       variant: 'text' as const,
       changeValue: capitalDelta,
@@ -217,6 +223,7 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
     },
     {
       title: 'Distributions',
+      metricId: 'distributions',
       value: compactDistributions,
       variant: 'text' as const,
       changeValue: distributionsDelta,
@@ -224,6 +231,7 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
     },
     {
       title: 'Portfolio IRR',
+      metricId: 'portfolio-irr',
       value: irrValue,
       variant: 'percent' as const,
       placeholder: irrValue === null ? 'Coming soon' : undefined,
@@ -329,14 +337,12 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
             {metricsLoading && !metricData
               ? Array.from({ length: 6 }).map((_, index) => <SkeletonCard key={index} />)
-              : kpiCards.map((kpi) => <KpiCard key={kpi.title} {...kpi} />)}
-          </div>
-        )}
-      </section>
-
-      <section>
-        <FundsTable />
-      </section>
+              : kpiCards.map(({ metricId, ...kpi }) => (
+                  <KpiCard key={kpi.title} {...kpi} onClick={() => navigate(`/metrics/${metricId}`)} />
+                ))}
+         </div>
+       )}
+     </section>
 
       <section className="space-y-4">
         <div>

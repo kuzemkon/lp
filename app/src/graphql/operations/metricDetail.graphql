@@ -1,0 +1,33 @@
+query MetricDetail($fundReportFilter: fund_report_filter) {
+  timeline: fund_report_aggregated(filter: $fundReportFilter, groupBy: ["report_date"]) {
+    group
+    sum {
+      total_value
+      capital_called
+      realized_value
+      unrealized_value
+    }
+    avg {
+      moic
+      net_irr
+    }
+    countDistinct {
+      fund_id
+    }
+  }
+  funds: fund(sort: ["name"]) {
+    id
+    name
+    fund_reports(filter: $fundReportFilter, sort: ["-report_date"], limit: 24) {
+      id
+      report_date
+      total_value
+      capital_called
+      realized_value
+      unrealized_value
+      moic
+      net_irr
+      num_investments
+    }
+  }
+}

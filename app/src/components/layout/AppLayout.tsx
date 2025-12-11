@@ -1,12 +1,13 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import NavBar from './NavBar';
+import Footer from './Footer';
 
 const AppLayout = () => {
   const { pathname } = useLocation();
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--canvas)' }}>
-      <div className="w-full bg-[var(--surface)]">
+      <div className="w-full border-b border-graphite-200 bg-[var(--surface)]">
         <div className="mx-auto w-full max-w-7xl px-6 pt-6">
           <NavBar activePath={pathname} />
         </div>
@@ -16,6 +17,7 @@ const AppLayout = () => {
           <Outlet />
         </main>
       </div>
+      <Footer />
     </div>
   );
 };

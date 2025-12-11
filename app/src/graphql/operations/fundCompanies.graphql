@@ -1,0 +1,32 @@
+query FundCompanies($fundId: ID!, $limit: Int = 20, $offset: Int = 0) {
+  fund: fund_by_id(id: $fundId) {
+    id
+    name
+  }
+  latestReport: fund_report(
+    filter: { fund_id: { id: { _eq: $fundId } } }
+    sort: ["-report_date"]
+    limit: 1
+  ) {
+    id
+    report_date
+    company_reports(limit: $limit, offset: $offset, sort: ["company_id.name"]) {
+      id
+      report_date
+      invested_capital
+      unrealized_value
+      realized_value
+      total_value
+      irr
+      company_id {
+        id
+        name
+        geography
+        sector
+      }
+    }
+    company_reports_func {
+      count
+    }
+  }
+}

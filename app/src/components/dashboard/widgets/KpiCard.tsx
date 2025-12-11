@@ -12,6 +12,7 @@ interface KpiCardProps {
   changeTone?: 'trend' | 'muted';
   isLoading?: boolean;
   placeholder?: string;
+  onClick?: () => void;
 }
 
 const formatByVariant = (value: number | string | null | undefined, variant: KpiCardProps['variant']) => {
@@ -43,6 +44,7 @@ const KpiCard = ({
   changeValue,
   changeTone = 'trend',
   placeholder,
+  onClick,
 }: KpiCardProps) => {
   const formattedValue = placeholder ?? formatByVariant(value, variant);
   const hasChangeValue = changeValue !== undefined && changeValue !== null && !Number.isNaN(changeValue);
@@ -51,30 +53,50 @@ const KpiCard = ({
   const computedLabel = changeTone === 'trend'
     ? changeLabel ?? (hasChangeValue ? `${isPositive ? '+' : ''}${formatNumber(changeValue)}` : undefined)
     : changeLabel ?? undefined;
+  const isClickable = Boolean(onClick);
+
+  const content = (
+    <div>
+      <div className="space-y-1">
+        <p className="text-base font-semibold text-black capitalize">{title}</p>
+        <p className="text-3xl font-semibold text-black">{formattedValue}</p>
+      </div>
+      {shouldRenderChange && computedLabel && (
+        <div
+          className={clsx(
+            'mt-1 inline-flex items-center gap-1 text-sm font-light leading-none',
+            changeTone === 'muted'
+              ? 'text-graphite-500'
+              : isPositive
+                ? 'text-mint-600'
+                : 'text-rose-500'
+          )}
+        >
+          {changeTone === 'trend' && hasChangeValue && (isPositive ? <ArrowUpIcon /> : <ArrowDownIcon />)}
+          {computedLabel}
+        </div>
+      )}
+    </div>
+  );
 
   return (
-    <SurfaceCard className="h-full p-6">
-      <div>
-        <div className="space-y-1">
-          <p className="text-base font-semibold text-black capitalize">{title}</p>
-          <p className="text-3xl font-semibold text-black">{formattedValue}</p>
-        </div>
-        {shouldRenderChange && computedLabel && (
-          <div
-            className={clsx(
-              'inline-flex items-center gap-1 text-sm font-light leading-none mt-1',
-              changeTone === 'muted'
-                ? 'text-graphite-500'
-                : isPositive
-                  ? 'text-mint-600'
-                  : 'text-rose-500'
-            )}
-          >
-            {changeTone === 'trend' && hasChangeValue && (isPositive ? <ArrowUpIcon /> : <ArrowDownIcon />)}
-            {computedLabel}
-          </div>
-        )}
-      </div>
+    <SurfaceCard
+      className={clsx(
+        'h-full p-6',
+        isClickable && 'cursor-pointer transition-shadow hover:shadow-md focus-within:ring-2 focus-within:ring-mint-500'
+      )}
+    >
+      {isClickable ? (
+        <button
+          type="button"
+          onClick={onClick}
+          className="w-full border-0 bg-transparent text-left focus:outline-none"
+        >
+          {content}
+        </button>
+      ) : (
+        content
+      )}
     </SurfaceCard>
   );
 };

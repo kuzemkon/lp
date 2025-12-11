@@ -44,3 +44,15 @@ body {
 .filter-badge {
   @apply inline-flex items-center gap-2 rounded-full bg-graphite-100 px-4 py-1 text-sm font-medium text-graphite-600;
 }
+
+.metric-chart {
+  user-select: none;
+}
+
+.metric-chart svg {
+  cursor: crosshair;
+}
+
+.metric-chart.dragging svg {
+  cursor: ew-resize;
+}

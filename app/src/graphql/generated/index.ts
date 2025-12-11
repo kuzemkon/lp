@@ -3125,6 +3125,15 @@ export type DashboardFiltersQueryVariables = Exact<{
 
 export type DashboardFiltersQuery = { __typename: 'Query', companyReports: Array<{ __typename: 'company_report', id: string, invested_capital?: number | null, company_id?: { __typename: 'company', id: string, geography?: string | null, sector?: string | null } | null }>, fundReports: Array<{ __typename: 'fund_report', id: string, capital_called?: number | null, fund_id?: { __typename: 'fund', id: string, vintage?: number | null } | null, organization_id?: { __typename: 'organizations', id: string, name: string } | null }> };
 
+export type FundCompaniesQueryVariables = Exact<{
+  fundId: Scalars['ID']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type FundCompaniesQuery = { __typename: 'Query', fund?: { __typename: 'fund', id: string, name: string } | null, latestReport: Array<{ __typename: 'fund_report', id: string, report_date: string, company_reports?: Array<{ __typename: 'company_report', id: string, report_date: string, invested_capital?: number | null, unrealized_value?: number | null, realized_value?: number | null, total_value?: number | null, irr?: number | null, company_id?: { __typename: 'company', id: string, name: string, geography?: string | null, sector?: string | null } | null } | null> | null, company_reports_func?: { __typename: 'count_functions', count?: number | null } | null }> };
+
 export type FundsListQueryVariables = Exact<{
   fundReportFilter?: InputMaybe<Fund_Report_Filter>;
   fundFilter?: InputMaybe<Fund_Filter>;
@@ -3134,6 +3143,13 @@ export type FundsListQueryVariables = Exact<{
 
 
 export type FundsListQuery = { __typename: 'Query', funds: Array<{ __typename: 'fund', id: string, name: string, vintage?: number | null, fund_reports?: Array<{ __typename: 'fund_report', id: string, report_date: string, fund_size?: number | null, num_investments?: number | null, capital_called?: number | null, unrealized_value?: number | null, realized_value?: number | null, total_value?: number | null, moic?: number | null, net_irr?: number | null, dpi?: number | null, organization_id?: { __typename: 'organizations', id: string, name: string } | null, company_reports?: Array<{ __typename: 'company_report', id: string, company_id?: { __typename: 'company', id: string, name: string, geography?: string | null, sector?: string | null } | null } | null> | null } | null> | null }>, total: Array<{ __typename: 'fund_aggregated', countAll?: number | null }> };
+
+export type MetricDetailQueryVariables = Exact<{
+  fundReportFilter?: InputMaybe<Fund_Report_Filter>;
+}>;
+
+
+export type MetricDetailQuery = { __typename: 'Query', timeline: Array<{ __typename: 'fund_report_aggregated', group?: Record<string, unknown> | null, sum?: { __typename: 'fund_report_aggregated_fields', total_value?: number | null, capital_called?: number | null, realized_value?: number | null, unrealized_value?: number | null } | null, avg?: { __typename: 'fund_report_aggregated_fields', moic?: number | null, net_irr?: number | null } | null, countDistinct?: { __typename: 'fund_report_aggregated_count', fund_id?: number | null } | null }>, funds: Array<{ __typename: 'fund', id: string, name: string, fund_reports?: Array<{ __typename: 'fund_report', id: string, report_date: string, total_value?: number | null, capital_called?: number | null, realized_value?: number | null, unrealized_value?: number | null, moic?: number | null, net_irr?: number | null, num_investments?: number | null } | null> | null }> };
 
 export type PortfolioDashboardQueryVariables = Exact<{
   fundReportFilter?: InputMaybe<Fund_Report_Filter>;
@@ -3203,6 +3219,75 @@ export type DashboardFiltersQueryHookResult = ReturnType<typeof useDashboardFilt
 export type DashboardFiltersLazyQueryHookResult = ReturnType<typeof useDashboardFiltersLazyQuery>;
 export type DashboardFiltersSuspenseQueryHookResult = ReturnType<typeof useDashboardFiltersSuspenseQuery>;
 export type DashboardFiltersQueryResult = Apollo.QueryResult<DashboardFiltersQuery, DashboardFiltersQueryVariables>;
+export const FundCompaniesDocument = gql`
+    query FundCompanies($fundId: ID!, $limit: Int = 20, $offset: Int = 0) {
+  fund: fund_by_id(id: $fundId) {
+    id
+    name
+  }
+  latestReport: fund_report(
+    filter: {fund_id: {id: {_eq: $fundId}}}
+    sort: ["-report_date"]
+    limit: 1
+  ) {
+    id
+    report_date
+    company_reports(limit: $limit, offset: $offset, sort: ["company_id.name"]) {
+      id
+      report_date
+      invested_capital
+      unrealized_value
+      realized_value
+      total_value
+      irr
+      company_id {
+        id
+        name
+        geography
+        sector
+      }
+    }
+    company_reports_func {
+      count
+    }
+  }
+}
+    `;
+
+/**
+ * __useFundCompaniesQuery__
+ *
+ * To run a query within a React component, call `useFundCompaniesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFundCompaniesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFundCompaniesQuery({
+ *   variables: {
+ *      fundId: // value for 'fundId'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useFundCompaniesQuery(baseOptions: Apollo.QueryHookOptions<FundCompaniesQuery, FundCompaniesQueryVariables> & ({ variables: FundCompaniesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FundCompaniesQuery, FundCompaniesQueryVariables>(FundCompaniesDocument, options);
+      }
+export function useFundCompaniesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FundCompaniesQuery, FundCompaniesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FundCompaniesQuery, FundCompaniesQueryVariables>(FundCompaniesDocument, options);
+        }
+export function useFundCompaniesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FundCompaniesQuery, FundCompaniesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FundCompaniesQuery, FundCompaniesQueryVariables>(FundCompaniesDocument, options);
+        }
+export type FundCompaniesQueryHookResult = ReturnType<typeof useFundCompaniesQuery>;
+export type FundCompaniesLazyQueryHookResult = ReturnType<typeof useFundCompaniesLazyQuery>;
+export type FundCompaniesSuspenseQueryHookResult = ReturnType<typeof useFundCompaniesSuspenseQuery>;
+export type FundCompaniesQueryResult = Apollo.QueryResult<FundCompaniesQuery, FundCompaniesQueryVariables>;
 export const FundsListDocument = gql`
     query FundsList($fundReportFilter: fund_report_filter, $fundFilter: fund_filter, $limit: Int = 10, $offset: Int = 0) {
   funds: fund(filter: $fundFilter, limit: $limit, offset: $offset, sort: ["name"]) {
@@ -3277,6 +3362,77 @@ export type FundsListQueryHookResult = ReturnType<typeof useFundsListQuery>;
 export type FundsListLazyQueryHookResult = ReturnType<typeof useFundsListLazyQuery>;
 export type FundsListSuspenseQueryHookResult = ReturnType<typeof useFundsListSuspenseQuery>;
 export type FundsListQueryResult = Apollo.QueryResult<FundsListQuery, FundsListQueryVariables>;
+export const MetricDetailDocument = gql`
+    query MetricDetail($fundReportFilter: fund_report_filter) {
+  timeline: fund_report_aggregated(
+    filter: $fundReportFilter
+    groupBy: ["report_date"]
+  ) {
+    group
+    sum {
+      total_value
+      capital_called
+      realized_value
+      unrealized_value
+    }
+    avg {
+      moic
+      net_irr
+    }
+    countDistinct {
+      fund_id
+    }
+  }
+  funds: fund(sort: ["name"]) {
+    id
+    name
+    fund_reports(filter: $fundReportFilter, sort: ["-report_date"], limit: 24) {
+      id
+      report_date
+      total_value
+      capital_called
+      realized_value
+      unrealized_value
+      moic
+      net_irr
+      num_investments
+    }
+  }
+}
+    `;
+
+/**
+ * __useMetricDetailQuery__
+ *
+ * To run a query within a React component, call `useMetricDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMetricDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMetricDetailQuery({
+ *   variables: {
+ *      fundReportFilter: // value for 'fundReportFilter'
+ *   },
+ * });
+ */
+export function useMetricDetailQuery(baseOptions?: Apollo.QueryHookOptions<MetricDetailQuery, MetricDetailQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MetricDetailQuery, MetricDetailQueryVariables>(MetricDetailDocument, options);
+      }
+export function useMetricDetailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MetricDetailQuery, MetricDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MetricDetailQuery, MetricDetailQueryVariables>(MetricDetailDocument, options);
+        }
+export function useMetricDetailSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MetricDetailQuery, MetricDetailQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<MetricDetailQuery, MetricDetailQueryVariables>(MetricDetailDocument, options);
+        }
+export type MetricDetailQueryHookResult = ReturnType<typeof useMetricDetailQuery>;
+export type MetricDetailLazyQueryHookResult = ReturnType<typeof useMetricDetailLazyQuery>;
+export type MetricDetailSuspenseQueryHookResult = ReturnType<typeof useMetricDetailSuspenseQuery>;
+export type MetricDetailQueryResult = Apollo.QueryResult<MetricDetailQuery, MetricDetailQueryVariables>;
 export const PortfolioDashboardDocument = gql`
     query PortfolioDashboard($fundReportFilter: fund_report_filter, $companyReportFilter: company_report_filter) {
   fundMetrics: fund_report_aggregated(filter: $fundReportFilter) {

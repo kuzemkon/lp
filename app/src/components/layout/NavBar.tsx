@@ -6,30 +6,44 @@ interface NavBarProps {
 }
 
 const NavBar = ({ activePath }: NavBarProps) => {
-  const isPortfolio = activePath.startsWith('/portfolio');
+  const navItems = [
+    {
+      label: 'Dashboard',
+      to: '/',
+      isActive:
+        activePath === '/' ||
+        activePath.startsWith('/portfolio') ||
+        activePath.startsWith('/metrics'),
+    },
+    {
+      label: 'Funds',
+      to: '/funds',
+      isActive: activePath === '/funds' || /^\/funds\/(?!$)/.test(activePath),
+    },
+  ];
 
   return (
-    <header className="w-full border-b border-graphite-200 bg-[var(--surface)]">
-      <div className="flex flex-wrap items-center justify-between gap-6 px-0 pb-4">
+    <header className="w-full bg-[var(--surface)]">
+      <div className="flex w-full flex-col items-start gap-4 px-0 pb-4 sm:flex-row sm:items-center sm:gap-6">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-mint-500 text-white text-lg font-semibold">
             FV
           </div>
-          <div className="leading-tight">
-            <p className="text-base font-semibold text-graphite-700">FundView</p>
-            <p className="text-sm text-graphite-400">Portfolio Intelligence</p>
-          </div>
+          <p className="text-xl font-bold leading-tight text-black">FundView</p>
         </div>
-        <nav className="flex items-center gap-6 text-sm font-medium text-graphite-400">
-          <NavLink
-            to="/portfolio"
-            className={clsx(
-              'pb-1 transition-colors',
-              isPortfolio ? 'text-graphite-800 border-b-2 border-mint-500' : 'hover:text-graphite-600'
-            )}
-          >
-            Portfolio
-          </NavLink>
+        <nav className="flex items-center gap-6 text-left text-base font-medium text-graphite-400 sm:ml-1.5 lg:ml-2">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={clsx(
+                'no-underline transition-colors',
+                item.isActive ? 'font-bold text-mint-500' : 'hover:text-graphite-600'
+              )}
+            >
+              {item.label}
+            </NavLink>
+          ))}
         </nav>
       </div>
     </header>
