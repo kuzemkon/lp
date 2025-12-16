@@ -308,19 +308,32 @@ const FundsTable = ({ variant = 'card' }: FundsTableProps) => {
                 'cursor-pointer border-t border-graphite-100 bg-white text-sm text-graphite-600 transition hover:bg-graphite-50'
               )}
               onClick={() => {
-                if (variant === 'card') {
-                  setFilter('fundId', row.fund.id);
-                  setFilter('fundName', row.fund.name ?? row.fund.id);
-                } else {
-                  navigate(`/funds/${encodeURIComponent(row.fund.id)}`, {
-                    state: { fundName: row.fund.name ?? undefined },
-                  });
-                }
+                navigate(`/funds/${encodeURIComponent(row.fund.id)}`, {
+                  state: { fundName: row.fund.name ?? undefined },
+                });
               }}
             >
               <td className="whitespace-nowrap px-4 py-3 font-semibold text-graphite-700">
-                <div>{row.fund.name ?? '—'}</div>
-                <p className="text-xs text-graphite-400">{reportDate}</p>
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div>{row.fund.name ?? '—'}</div>
+                    <p className="text-xs text-graphite-400">{reportDate}</p>
+                  </div>
+                  {variant === 'card' && (
+                    <Button
+                      variant="light"
+                      color="emerald"
+                      size="xs"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setFilter('fundId', row.fund.id);
+                        setFilter('fundName', row.fund.name ?? row.fund.id);
+                      }}
+                    >
+                      Filter
+                    </Button>
+                  )}
+                </div>
               </td>
               <td className="whitespace-nowrap px-4 py-3">
                 {row.latestReport?.fund_manager_id?.name ?? '—'}
