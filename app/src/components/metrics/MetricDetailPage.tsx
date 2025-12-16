@@ -394,7 +394,7 @@ const MetricDetailPage = () => {
                 <tr className="bg-graphite-50 text-left text-xs font-semibold uppercase tracking-[0.1em] text-graphite-400">
                   <th className="px-4 py-3">Fund</th>
                   <th className="px-4 py-3 text-right">Latest</th>
-                  <th className="px-4 py-3 text-right">Delta</th>
+                  <th className="px-4 py-3 text-right">Change</th>
                 </tr>
               </thead>
               <tbody>

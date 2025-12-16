@@ -18,6 +18,7 @@ query FundCompanies($fundId: ID!, $limit: Int = 20, $offset: Int = 0) {
       realized_value
       total_value
       irr
+      valuation_multiple
       company_id {
         id
         name

@@ -3,6 +3,7 @@ import AppLayout from '../components/layout/AppLayout';
 import DashboardPage from '../components/dashboard/DashboardPage';
 import FundsPage from '../components/funds/FundsPage';
 import FundCompaniesPage from '../components/funds/FundCompaniesPage';
+import CompanyDetailPage from '../components/funds/CompanyDetailPage';
 import PrivacyPolicyPage from '../components/legal/PrivacyPolicyPage';
 import TermsOfUsePage from '../components/legal/TermsOfUsePage';
 import PortfolioInsightsPage from '../components/insights/PortfolioInsightsPage';
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: '/funds/:fundId',
         element: <FundCompaniesPage />,
+      },
+      {
+        path: '/funds/:fundId/companies/:companyId',
+        element: <CompanyDetailPage />,
       },
       {
         path: '/insights',

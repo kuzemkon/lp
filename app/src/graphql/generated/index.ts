@@ -1148,6 +1148,15 @@ export type CompanyInsightsRecordsQueryVariables = Exact<{
 
 export type CompanyInsightsRecordsQuery = { __typename: 'Query', companyReports: Array<{ __typename: 'company_report', id: string, report_date: string, investment_date?: string | null, invested_capital?: number | null, total_value?: number | null, irr?: number | null, revenue?: number | null, ebitda?: number | null, realized_value?: number | null, unrealized_value?: number | null, enterprise_value?: number | null, equity_value?: number | null, debt?: number | null, valuation_multiple?: number | null, status?: string | null, thesis_commentary?: string | null, company_id?: { __typename: 'company', id: string, name: string, geography?: string | null, sector?: string | null } | null, fund_report_id?: { __typename: 'fund_report', fund_manager_id?: { __typename: 'fund_manager', name: string } | null } | null }> };
 
+export type CompanyReportsTimelineQueryVariables = Exact<{
+  fundId: Scalars['ID']['input'];
+  companyId: Scalars['ID']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type CompanyReportsTimelineQuery = { __typename: 'Query', reports: Array<{ __typename: 'company_report', id: string, report_date: string, revenue?: number | null, ebitda?: number | null }> };
+
 export type DashboardFiltersQueryVariables = Exact<{
   fundReportFilter?: InputMaybe<Fund_Report_Filter>;
   companyReportFilter?: InputMaybe<Company_Report_Filter>;
@@ -1164,7 +1173,15 @@ export type FundCompaniesQueryVariables = Exact<{
 }>;
 
 
-export type FundCompaniesQuery = { __typename: 'Query', fund?: { __typename: 'fund', id: string, name: string } | null, latestReport: Array<{ __typename: 'fund_report', id: string, report_date: string, company_reports?: Array<{ __typename: 'company_report', id: string, report_date: string, invested_capital?: number | null, unrealized_value?: number | null, realized_value?: number | null, total_value?: number | null, irr?: number | null, company_id?: { __typename: 'company', id: string, name: string, geography?: string | null, sector?: string | null } | null } | null> | null, company_reports_func?: { __typename: 'count_functions', count?: number | null } | null }> };
+export type FundCompaniesQuery = { __typename: 'Query', fund?: { __typename: 'fund', id: string, name: string } | null, latestReport: Array<{ __typename: 'fund_report', id: string, report_date: string, company_reports?: Array<{ __typename: 'company_report', id: string, report_date: string, invested_capital?: number | null, unrealized_value?: number | null, realized_value?: number | null, total_value?: number | null, irr?: number | null, valuation_multiple?: number | null, company_id?: { __typename: 'company', id: string, name: string, geography?: string | null, sector?: string | null } | null } | null> | null, company_reports_func?: { __typename: 'count_functions', count?: number | null } | null }> };
+
+export type FundCompanyDetailQueryVariables = Exact<{
+  fundId: Scalars['ID']['input'];
+  companyId: Scalars['ID']['input'];
+}>;
+
+
+export type FundCompanyDetailQuery = { __typename: 'Query', fund?: { __typename: 'fund', id: string, name: string } | null, company?: { __typename: 'company', id: string, name: string, geography?: string | null, sector?: string | null } | null, latestReport: Array<{ __typename: 'company_report', id: string, report_date: string, invested_capital?: number | null, realized_value?: number | null, unrealized_value?: number | null, total_value?: number | null, irr?: number | null, enterprise_value?: number | null, equity_value?: number | null, debt?: number | null, valuation_multiple?: number | null, revenue?: number | null, ebitda?: number | null, status?: string | null }>, earliestReport: Array<{ __typename: 'company_report', id: string, report_date: string, invested_capital?: number | null, realized_value?: number | null, unrealized_value?: number | null, total_value?: number | null, irr?: number | null, enterprise_value?: number | null, equity_value?: number | null, debt?: number | null, valuation_multiple?: number | null, revenue?: number | null, ebitda?: number | null, status?: string | null }> };
 
 export type FundInsightsAggregationQueryVariables = Exact<{
   filter?: InputMaybe<Fund_Report_Filter>;
@@ -1372,6 +1389,55 @@ export type CompanyInsightsRecordsQueryHookResult = ReturnType<typeof useCompany
 export type CompanyInsightsRecordsLazyQueryHookResult = ReturnType<typeof useCompanyInsightsRecordsLazyQuery>;
 export type CompanyInsightsRecordsSuspenseQueryHookResult = ReturnType<typeof useCompanyInsightsRecordsSuspenseQuery>;
 export type CompanyInsightsRecordsQueryResult = Apollo.QueryResult<CompanyInsightsRecordsQuery, CompanyInsightsRecordsQueryVariables>;
+export const CompanyReportsTimelineDocument = gql`
+    query CompanyReportsTimeline($fundId: ID!, $companyId: ID!, $limit: Int = 100) {
+  reports: company_report(
+    filter: {company_id: {id: {_eq: $companyId}}, fund_report_id: {fund_id: {id: {_eq: $fundId}}}}
+    sort: ["report_date"]
+    limit: $limit
+  ) {
+    id
+    report_date
+    revenue
+    ebitda
+  }
+}
+    `;
+
+/**
+ * __useCompanyReportsTimelineQuery__
+ *
+ * To run a query within a React component, call `useCompanyReportsTimelineQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCompanyReportsTimelineQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCompanyReportsTimelineQuery({
+ *   variables: {
+ *      fundId: // value for 'fundId'
+ *      companyId: // value for 'companyId'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useCompanyReportsTimelineQuery(baseOptions: Apollo.QueryHookOptions<CompanyReportsTimelineQuery, CompanyReportsTimelineQueryVariables> & ({ variables: CompanyReportsTimelineQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CompanyReportsTimelineQuery, CompanyReportsTimelineQueryVariables>(CompanyReportsTimelineDocument, options);
+      }
+export function useCompanyReportsTimelineLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CompanyReportsTimelineQuery, CompanyReportsTimelineQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CompanyReportsTimelineQuery, CompanyReportsTimelineQueryVariables>(CompanyReportsTimelineDocument, options);
+        }
+export function useCompanyReportsTimelineSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CompanyReportsTimelineQuery, CompanyReportsTimelineQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CompanyReportsTimelineQuery, CompanyReportsTimelineQueryVariables>(CompanyReportsTimelineDocument, options);
+        }
+export type CompanyReportsTimelineQueryHookResult = ReturnType<typeof useCompanyReportsTimelineQuery>;
+export type CompanyReportsTimelineLazyQueryHookResult = ReturnType<typeof useCompanyReportsTimelineLazyQuery>;
+export type CompanyReportsTimelineSuspenseQueryHookResult = ReturnType<typeof useCompanyReportsTimelineSuspenseQuery>;
+export type CompanyReportsTimelineQueryResult = Apollo.QueryResult<CompanyReportsTimelineQuery, CompanyReportsTimelineQueryVariables>;
 export const DashboardFiltersDocument = gql`
     query DashboardFilters($fundReportFilter: fund_report_filter, $companyReportFilter: company_report_filter, $fundManagerFilter: fund_manager_filter) {
   companyReports: company_report(filter: $companyReportFilter, limit: 500) {
@@ -1481,6 +1547,7 @@ export const FundCompaniesDocument = gql`
       realized_value
       total_value
       irr
+      valuation_multiple
       company_id {
         id
         name
@@ -1529,6 +1596,94 @@ export type FundCompaniesQueryHookResult = ReturnType<typeof useFundCompaniesQue
 export type FundCompaniesLazyQueryHookResult = ReturnType<typeof useFundCompaniesLazyQuery>;
 export type FundCompaniesSuspenseQueryHookResult = ReturnType<typeof useFundCompaniesSuspenseQuery>;
 export type FundCompaniesQueryResult = Apollo.QueryResult<FundCompaniesQuery, FundCompaniesQueryVariables>;
+export const FundCompanyDetailDocument = gql`
+    query FundCompanyDetail($fundId: ID!, $companyId: ID!) {
+  fund: fund_by_id(id: $fundId) {
+    id
+    name
+  }
+  company: company_by_id(id: $companyId) {
+    id
+    name
+    geography
+    sector
+  }
+  latestReport: company_report(
+    filter: {company_id: {id: {_eq: $companyId}}, fund_report_id: {fund_id: {id: {_eq: $fundId}}}}
+    sort: ["-report_date"]
+    limit: 1
+  ) {
+    id
+    report_date
+    invested_capital
+    realized_value
+    unrealized_value
+    total_value
+    irr
+    enterprise_value
+    equity_value
+    debt
+    valuation_multiple
+    revenue
+    ebitda
+    status
+  }
+  earliestReport: company_report(
+    filter: {company_id: {id: {_eq: $companyId}}, fund_report_id: {fund_id: {id: {_eq: $fundId}}}}
+    sort: ["report_date"]
+    limit: 1
+  ) {
+    id
+    report_date
+    invested_capital
+    realized_value
+    unrealized_value
+    total_value
+    irr
+    enterprise_value
+    equity_value
+    debt
+    valuation_multiple
+    revenue
+    ebitda
+    status
+  }
+}
+    `;
+
+/**
+ * __useFundCompanyDetailQuery__
+ *
+ * To run a query within a React component, call `useFundCompanyDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFundCompanyDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFundCompanyDetailQuery({
+ *   variables: {
+ *      fundId: // value for 'fundId'
+ *      companyId: // value for 'companyId'
+ *   },
+ * });
+ */
+export function useFundCompanyDetailQuery(baseOptions: Apollo.QueryHookOptions<FundCompanyDetailQuery, FundCompanyDetailQueryVariables> & ({ variables: FundCompanyDetailQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FundCompanyDetailQuery, FundCompanyDetailQueryVariables>(FundCompanyDetailDocument, options);
+      }
+export function useFundCompanyDetailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FundCompanyDetailQuery, FundCompanyDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FundCompanyDetailQuery, FundCompanyDetailQueryVariables>(FundCompanyDetailDocument, options);
+        }
+export function useFundCompanyDetailSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FundCompanyDetailQuery, FundCompanyDetailQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FundCompanyDetailQuery, FundCompanyDetailQueryVariables>(FundCompanyDetailDocument, options);
+        }
+export type FundCompanyDetailQueryHookResult = ReturnType<typeof useFundCompanyDetailQuery>;
+export type FundCompanyDetailLazyQueryHookResult = ReturnType<typeof useFundCompanyDetailLazyQuery>;
+export type FundCompanyDetailSuspenseQueryHookResult = ReturnType<typeof useFundCompanyDetailSuspenseQuery>;
+export type FundCompanyDetailQueryResult = Apollo.QueryResult<FundCompanyDetailQuery, FundCompanyDetailQueryVariables>;
 export const FundInsightsAggregationDocument = gql`
     query FundInsightsAggregation($filter: fund_report_filter, $groupBy: [String!]) {
   fundAggregation: fund_report_aggregated(filter: $filter, groupBy: $groupBy) {

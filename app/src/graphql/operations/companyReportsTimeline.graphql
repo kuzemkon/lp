@@ -1,0 +1,15 @@
+query CompanyReportsTimeline($fundId: ID!, $companyId: ID!, $limit: Int = 100) {
+  reports: company_report(
+    filter: {
+      company_id: { id: { _eq: $companyId } }
+      fund_report_id: { fund_id: { id: { _eq: $fundId } } }
+    }
+    sort: ["report_date"]
+    limit: $limit
+  ) {
+    id
+    report_date
+    revenue
+    ebitda
+  }
+}

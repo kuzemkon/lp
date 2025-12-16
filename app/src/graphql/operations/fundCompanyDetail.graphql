@@ -1,0 +1,58 @@
+query FundCompanyDetail($fundId: ID!, $companyId: ID!) {
+  fund: fund_by_id(id: $fundId) {
+    id
+    name
+  }
+  company: company_by_id(id: $companyId) {
+    id
+    name
+    geography
+    sector
+  }
+  latestReport: company_report(
+    filter: {
+      company_id: { id: { _eq: $companyId } }
+      fund_report_id: { fund_id: { id: { _eq: $fundId } } }
+    }
+    sort: ["-report_date"]
+    limit: 1
+  ) {
+    id
+    report_date
+    invested_capital
+    realized_value
+    unrealized_value
+    total_value
+    irr
+    enterprise_value
+    equity_value
+    debt
+    valuation_multiple
+    revenue
+    ebitda
+    status
+  }
+  earliestReport: company_report(
+    filter: {
+      company_id: { id: { _eq: $companyId } }
+      fund_report_id: { fund_id: { id: { _eq: $fundId } } }
+    }
+    sort: ["report_date"]
+    limit: 1
+  ) {
+    id
+    report_date
+    invested_capital
+    realized_value
+    unrealized_value
+    total_value
+    irr
+    enterprise_value
+    equity_value
+    debt
+    valuation_multiple
+    revenue
+    ebitda
+    status
+  }
+}

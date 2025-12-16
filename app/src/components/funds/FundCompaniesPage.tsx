@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@tremor/react';
+import { clsx } from 'clsx';
 import { useFundCompaniesQuery } from '../../graphql/generated';
 import SkeletonCard from '../dashboard/widgets/SkeletonCard';
 import SurfaceCard from '../ui/SurfaceCard';
@@ -15,6 +16,7 @@ type LocationState = {
 const FundCompaniesPage = () => {
   const { fundId } = useParams<{ fundId: string }>();
   const location = useLocation();
+  const navigate = useNavigate();
   const locationState = (location.state as LocationState | null) ?? undefined;
   const [page, setPage] = useState(0);
 
@@ -94,6 +96,7 @@ const FundCompaniesPage = () => {
                 <th className="whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.08em]">Unrealized</th>
                 <th className="whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.08em]">Total value</th>
                 <th className="whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.08em]">IRR</th>
+                <th className="whitespace-nowrap px-4 py-3 text-right uppercase tracking-[0.08em]">Valuation multiple</th>
               </tr>
             </thead>
             <tbody>
@@ -107,10 +110,26 @@ const FundCompaniesPage = () => {
                       year: 'numeric',
                     })
                   : '—';
+                const companyLinkPath = report.company_id?.id
+                  ? `/funds/${encodeURIComponent(fundId)}/companies/${encodeURIComponent(report.company_id.id)}`
+                  : null;
+
                 return (
-                  <tr key={report.id} className="border-t border-graphite-100 text-sm text-graphite-600">
+                  <tr
+                    key={report.id}
+                    className={clsx(
+                      'border-t border-graphite-100 text-sm text-graphite-600',
+                      companyLinkPath && 'cursor-pointer transition hover:bg-graphite-50'
+                    )}
+                    onClick={() => {
+                      if (!companyLinkPath) return;
+                      navigate(companyLinkPath, {
+                        state: { fundName, companyName: report.company_id?.name ?? undefined },
+                      });
+                    }}
+                  >
                     <td className="whitespace-nowrap px-4 py-3 font-semibold text-graphite-700">
-                      <div>{report.company_id?.name ?? '—'}</div>
+                      <div className="text-mint-700">{report.company_id?.name ?? '—'}</div>
                       <p className="text-xs text-graphite-400">{reportDate}</p>
                     </td>
                     <td className="px-4 py-3">{report.company_id?.geography ?? '—'}</td>
@@ -120,6 +139,7 @@ const FundCompaniesPage = () => {
                     <td className="px-4 py-3 text-right">{formatCompactCurrency(report.unrealized_value)}</td>
                     <td className="px-4 py-3 text-right">{formatCompactCurrency(report.total_value)}</td>
                     <td className="px-4 py-3 text-right">{formatNumber(report.irr)}</td>
+                    <td className="px-4 py-3 text-right">{formatNumber(report.valuation_multiple)}</td>
                   </tr>
                 );
               })}
