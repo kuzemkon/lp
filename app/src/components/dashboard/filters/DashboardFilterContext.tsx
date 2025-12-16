@@ -7,11 +7,11 @@ import {
   useState,
 } from 'react';
 
-type FilterKey = 'geography' | 'strategy' | 'vintage' | 'manager' | 'fundId' | 'fundName';
+type FilterKey = 'geography' | 'sector' | 'vintage' | 'manager' | 'fundId' | 'fundName';
 
 export type DashboardFilters = {
   geography?: string | null;
-  strategy?: string | null;
+  sector?: string | null;
   vintage?: number | null;
   manager?: string | null;
   fundId?: string | null;

@@ -117,11 +117,14 @@ const PieChartCard = ({title, data = [], loading, activeName, onSelect}: PieChar
                     </div>
                 </div>
         <ul className="space-y-0 px-0 pb-0">
-          {data.map((item, index) => (
-                        <li key={item.name}>
-                            <button
-                                type="button"
-                                onClick={() => onSelect?.(item.name)}
+          {data.map((item, index) => {
+            const formattedName =
+              item.name.length > 20 ? `${item.name.slice(0, 20)}…` : item.name;
+            return (
+            <li key={item.name}>
+                <button
+                    type="button"
+                    onClick={() => onSelect?.(item.name)}
                 className={clsx(
                   'flex w-full items-center justify-between rounded-md border px-1 py-0.5 text-left transition',
                                     activeName === item.name
@@ -134,7 +137,9 @@ const PieChartCard = ({title, data = [], loading, activeName, onSelect}: PieChar
                       className="h-3 w-3 rounded-full"
                       style={{backgroundColor: chartShades[index % chartShades.length]}}
                   />
-                  <span className="truncate">{item.name}</span>
+                  <span className="truncate" title={item.name}>
+                    {formattedName}
+                  </span>
                 </span>
                                 <span className="text-sm font-semibold text-graphite-600">
                   {totalValue > 0
@@ -143,7 +148,8 @@ const PieChartCard = ({title, data = [], loading, activeName, onSelect}: PieChar
                 </span>
                             </button>
                         </li>
-                    ))}
+                    );
+          })}
                 </ul>
             </div>
             {activeName && (

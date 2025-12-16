@@ -25,7 +25,7 @@ query FundsList(
       moic
       net_irr
       dpi
-      organization_id {
+      fund_manager_id {
         id
         name
       }

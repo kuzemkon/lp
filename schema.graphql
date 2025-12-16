@@ -325,7 +325,7 @@ type fund_manager {
   created_at_func: datetime_functions
   updated_at: Date
   updated_at_func: datetime_functions
-  fund_reports: String
+  fund_reports(filter: fund_report_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [fund_report]
   fund_reports_func: count_functions
 }
 
@@ -351,7 +351,7 @@ input fund_manager_filter {
   created_at_func: datetime_function_filter_operators
   updated_at: date_filter_operators
   updated_at_func: datetime_function_filter_operators
-  fund_reports: string_filter_operators
+  fund_reports: fund_report_quantifier_filter
   fund_reports_func: count_function_filter_operators
   _and: [fund_manager_filter]
   _or: [fund_manager_filter]
@@ -388,6 +388,7 @@ type fund_report {
   created_at_func: datetime_functions
   updated_at: Date
   updated_at_func: datetime_functions
+  fund_manager_id(filter: fund_manager_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): fund_manager
   company_reports(filter: company_report_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [company_report]
   company_reports_func: count_functions
 }
@@ -421,6 +422,7 @@ type fund_report_aggregated_count {
   dpi: Int
   created_at: Int
   updated_at: Int
+  fund_manager_id: Int
   company_reports: Int
 }
 
@@ -455,6 +457,7 @@ input fund_report_filter {
   created_at_func: datetime_function_filter_operators
   updated_at: date_filter_operators
   updated_at_func: datetime_function_filter_operators
+  fund_manager_id: fund_manager_filter
   company_reports: company_report_quantifier_filter
   company_reports_func: count_function_filter_operators
   _and: [fund_report_filter]
@@ -486,6 +489,7 @@ input fund_report_quantifier_filter {
   created_at_func: datetime_function_filter_operators
   updated_at: date_filter_operators
   updated_at_func: datetime_function_filter_operators
+  fund_manager_id: fund_manager_filter
   company_reports: company_report_quantifier_filter
   company_reports_func: count_function_filter_operators
   _and: [fund_report_filter]
@@ -707,7 +711,7 @@ type version_fund_manager {
   created_at_func: datetime_functions
   updated_at: Date
   updated_at_func: datetime_functions
-  fund_reports: String
+  fund_reports: JSON
   fund_reports_func: count_functions
 }
 
@@ -730,6 +734,7 @@ type version_fund_report {
   created_at_func: datetime_functions
   updated_at: Date
   updated_at_func: datetime_functions
+  fund_manager_id: JSON
   company_reports: JSON
   company_reports_func: count_functions
 }

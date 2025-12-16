@@ -3,6 +3,7 @@ import type {
   Company_Report_Filter,
   Company_Report_Quantifier_Filter,
   Fund_Filter,
+  Fund_Manager_Filter,
   Fund_Report_Filter,
 } from '../../../graphql/generated';
 import { DashboardFilters, useDashboardFilterContext } from './DashboardFilterContext';
@@ -24,8 +25,8 @@ const buildCompanyReportsFilter = (
     companyFilter.geography = { _eq: filters.geography };
   }
 
-  if (filters.strategy) {
-    companyFilter.sector = { _eq: filters.strategy };
+  if (filters.sector) {
+    companyFilter.sector = { _eq: filters.sector };
   }
 
   if (!hasKeys(companyFilter)) {
@@ -64,7 +65,7 @@ const buildFundReportFilter = (
   }
 
   if (filters.manager) {
-    filter.organization_id = {
+    filter.fund_manager_id = {
       name: { _eq: filters.manager },
     };
   }
@@ -77,20 +78,30 @@ const buildFundReportFilter = (
   return hasKeys(filter) ? filter : undefined;
 };
 
+const buildFundManagerFilter = (filters: DashboardFilters): Fund_Manager_Filter | undefined => {
+  if (!filters.manager) {
+    return undefined;
+  }
+
+  return {
+    name: { _eq: filters.manager },
+  };
+};
+
 const buildCompanyReportFilter = (
   filters: DashboardFilters
 ): Company_Report_Filter | undefined => {
   const filter: Company_Report_Filter = {};
 
-  if (filters.geography || filters.strategy) {
+  if (filters.geography || filters.sector) {
     filter.company_id = {};
 
     if (filters.geography) {
       filter.company_id.geography = { _eq: filters.geography };
     }
 
-    if (filters.strategy) {
-      filter.company_id.sector = { _eq: filters.strategy };
+    if (filters.sector) {
+      filter.company_id.sector = { _eq: filters.sector };
     }
   }
 
@@ -131,14 +142,14 @@ const buildFundFilter = (filters: DashboardFilters): Fund_Filter | undefined => 
 export const useDashboardFilters = () => {
   const context = useDashboardFilterContext();
 
-  const queryFilters = useMemo(
-    () => ({
+  const queryFilters = useMemo(() => {
+    return {
       fundReportFilter: buildFundReportFilter(context.filters),
       companyReportFilter: buildCompanyReportFilter(context.filters),
       fundFilter: buildFundFilter(context.filters),
-    }),
-    [context.filters]
-  );
+      fundManagerFilter: buildFundManagerFilter(context.filters),
+    };
+  }, [context.filters]);
 
   return {
     ...context,

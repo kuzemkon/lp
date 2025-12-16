@@ -16,7 +16,7 @@ query FundInsightsRecords($filter: fund_report_filter, $limit: Int = 500) {
       name
       vintage
     }
-    organization_id {
+    fund_manager_id {
       name
     }
     company_reports(limit: 1) {

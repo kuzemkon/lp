@@ -1,6 +1,7 @@
 query DashboardFilters(
   $fundReportFilter: fund_report_filter
   $companyReportFilter: company_report_filter
+  $fundManagerFilter: fund_manager_filter
 ) {
   companyReports: company_report(
     filter: $companyReportFilter
@@ -13,20 +14,48 @@ query DashboardFilters(
       geography
       sector
     }
+    fund_report_id {
+      fund_manager_id {
+        id
+        name
+      }
+      fund_id {
+        id
+        vintage
+      }
+    }
   }
   fundReports: fund_report(
     filter: $fundReportFilter
     limit: 500
+    sort: ["-report_date"]
   ) {
     id
+    report_date
     capital_called
+    total_value
     fund_id {
       id
       vintage
     }
-    organization_id {
+    fund_manager_id {
       id
       name
+    }
+  }
+  fundManagers: fund_manager(
+    filter: $fundManagerFilter
+    limit: 500
+  ) {
+    id
+    name
+    fund_reports(filter: $fundReportFilter, limit: 500, sort: ["-report_date"]) {
+      id
+      report_date
+      total_value
+      fund_id {
+        id
+      }
     }
   }
 }

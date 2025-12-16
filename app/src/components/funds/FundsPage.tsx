@@ -31,8 +31,8 @@ const FundsPage = () => {
             {filters.geography && (
               <Chip label={`Geography: ${filters.geography}`} onRemove={() => removeFilter('geography')} />
             )}
-            {filters.strategy && (
-              <Chip label={`Strategy: ${filters.strategy}`} onRemove={() => removeFilter('strategy')} />
+            {filters.sector && (
+              <Chip label={`Sector: ${filters.sector}`} onRemove={() => removeFilter('sector')} />
             )}
             {filters.vintage && (
               <Chip label={`Vintage: ${filters.vintage}`} onRemove={() => removeFilter('vintage')} />

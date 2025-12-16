@@ -23,7 +23,7 @@ query CompanyInsightsRecords($filter: company_report_filter, $limit: Int = 500) 
       sector
     }
     fund_report_id {
-      organization_id {
+      fund_manager_id {
         name
       }
     }

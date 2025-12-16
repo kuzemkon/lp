@@ -187,9 +187,9 @@ const companyColumns: ColumnDefinition[] = [
     key: 'manager',
     label: 'Fund Manager',
     type: 'string',
-    groupPath: 'fund_report_id.organization_id.name',
+    groupPath: 'fund_report_id.fund_manager_id.name',
     accessor: (row: CompanyInsightsRecordsQuery['companyReports'][number]) =>
-      row.fund_report_id?.organization_id?.name ?? '—',
+      row.fund_report_id?.fund_manager_id?.name ?? '—',
   },
   {
     key: 'total_value',
@@ -283,8 +283,8 @@ const fundColumns: ColumnDefinition[] = [
     key: 'manager',
     label: 'Fund Manager',
     type: 'string',
-    groupPath: 'organization_id.name',
-    accessor: (row: FundInsightsRecordsQuery['fundReports'][number]) => row.organization_id?.name ?? '—',
+    groupPath: 'fund_manager_id.name',
+    accessor: (row: FundInsightsRecordsQuery['fundReports'][number]) => row.fund_manager_id?.name ?? '—',
   },
   {
     key: 'sample_geography',
@@ -804,7 +804,7 @@ const PortfolioInsightsPage = () => {
           case 'status':
             return { status: filterValue };
           case 'manager':
-            return { fund_report_id: { organization_id: { name: filterValue } } };
+            return { fund_report_id: { fund_manager_id: { name: filterValue } } };
           default:
             return null;
         }
@@ -817,7 +817,7 @@ const PortfolioInsightsPage = () => {
         case 'vintage':
           return { fund_id: { vintage: filterValue } };
         case 'manager':
-          return { organization_id: { name: filterValue } };
+          return { fund_manager_id: { name: filterValue } };
         default:
           return null;
       }

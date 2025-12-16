@@ -14,7 +14,7 @@ type ColumnKey =
   | 'manager'
   | 'vintage'
   | 'geography'
-  | 'strategy'
+  | 'sector'
   | 'committed'
   | 'capitalCalled'
   | 'distributions'
@@ -53,7 +53,7 @@ const columns: ColumnConfig[] = [
     label: 'Fund manager',
     sortable: true,
     align: 'left',
-    getValue: (row) => row.latestReport?.organization_id?.name ?? '',
+    getValue: (row) => row.latestReport?.fund_manager_id?.name ?? '',
   },
   {
     key: 'vintage',
@@ -63,7 +63,7 @@ const columns: ColumnConfig[] = [
     getValue: (row) => row.fund.vintage ?? null,
   },
   { key: 'geography', label: 'Geography', sortable: false, align: 'left' },
-  { key: 'strategy', label: 'Strategy', sortable: false, align: 'left' },
+  { key: 'sector', label: 'Sector', sortable: false, align: 'left' },
   {
     key: 'committed',
     label: 'Committed capital',
@@ -121,7 +121,7 @@ const getTags = (report: FundReportEntry | null) => {
 
   return {
     geography: Array.from(geos).join(', ') || '—',
-    strategy: Array.from(sectors).join(', ') || '—',
+    sector: Array.from(sectors).join(', ') || '—',
   };
 };
 
@@ -323,11 +323,11 @@ const FundsTable = ({ variant = 'card' }: FundsTableProps) => {
                 <p className="text-xs text-graphite-400">{reportDate}</p>
               </td>
               <td className="whitespace-nowrap px-4 py-3">
-                {row.latestReport?.organization_id?.name ?? '—'}
+                {row.latestReport?.fund_manager_id?.name ?? '—'}
               </td>
               <td className="whitespace-nowrap px-4 py-3">{row.fund.vintage ?? '—'}</td>
               <td className="px-4 py-3">{tags.geography}</td>
-              <td className="px-4 py-3">{tags.strategy}</td>
+              <td className="px-4 py-3">{tags.sector}</td>
               <td className="px-4 py-3 text-right">
                 {formatCompactCurrency(row.latestReport?.fund_size)}
               </td>

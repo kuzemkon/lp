@@ -69,6 +69,7 @@ const DashboardPage = () => {
     clearFilters,
     fundReportFilter,
     companyReportFilter,
+    fundManagerFilter,
   } = useDashboardFilters();
 
   const {
@@ -87,7 +88,7 @@ const DashboardPage = () => {
     error: chartsError,
     refetch: refetchCharts,
   } = useDashboardFiltersQuery({
-    variables: { fundReportFilter, companyReportFilter },
+    variables: { fundReportFilter, companyReportFilter, fundManagerFilter },
     fetchPolicy: 'no-cache',
   });
 
@@ -246,6 +247,20 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
   const pies = useMemo(() => {
     const companyReports = chartData?.companyReports ?? [];
     const fundReports = chartData?.fundReports ?? [];
+    const fundManagers = chartData?.fundManagers ?? [];
+
+    const managerTotals = new Map<string, number>();
+
+    companyReports.forEach((report) => {
+      const managerName = report.fund_report_id?.fund_manager_id?.name ?? 'Unassigned manager';
+      const value = report.invested_capital ?? 0;
+      managerTotals.set(managerName, (managerTotals.get(managerName) ?? 0) + value);
+    });
+
+    const managerData = Array.from(managerTotals.entries()).map(([name, total]) => ({
+      name,
+      total,
+    }));
 
     return {
       geography: buildDistribution(
@@ -254,22 +269,22 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
         (report) => report.invested_capital ?? 1,
         'Unknown'
       ),
-      strategy: buildDistribution(
+      sector: buildDistribution(
         companyReports,
         (report) => report.company_id?.sector,
         (report) => report.invested_capital ?? 1,
         'Unspecified'
       ),
       vintage: buildDistribution(
-        fundReports,
-        (report) => report.fund_id?.vintage,
-        (report) => report.capital_called ?? 1,
+        companyReports,
+        (report) => report.fund_report_id?.fund_id?.vintage,
+        (report) => report.invested_capital ?? 1,
         'Vintage'
       ),
       manager: buildDistribution(
-        fundReports,
-        (report) => report.organization_id?.name,
-        (report) => report.capital_called ?? 1,
+        managerData,
+        (entry) => entry.name,
+        (entry) => entry.total,
         'Manager'
       ),
     };
@@ -302,8 +317,8 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
             {filters.geography && (
               <Chip label={`Geography: ${filters.geography}`} onRemove={() => removeFilter('geography')} />
             )}
-            {filters.strategy && (
-              <Chip label={`Strategy: ${filters.strategy}`} onRemove={() => removeFilter('strategy')} />
+            {filters.sector && (
+              <Chip label={`Sector: ${filters.sector}`} onRemove={() => removeFilter('sector')} />
             )}
             {filters.vintage && (
               <Chip label={`Vintage: ${filters.vintage}`} onRemove={() => removeFilter('vintage')} />
@@ -367,11 +382,11 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
               onSelect={(name) => setFilter('geography', name)}
             />
             <PieChartCard
-              title="Strategy"
-              data={pies.strategy}
+              title="Sector"
+              data={pies.sector}
               loading={chartsLoading}
-              activeName={filters.strategy ?? null}
-              onSelect={(name) => setFilter('strategy', name)}
+              activeName={filters.sector ?? null}
+              onSelect={(name) => setFilter('sector', name)}
             />
             <PieChartCard
               title="Vintage"
