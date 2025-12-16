@@ -29,6 +29,11 @@ const NavBar = ({ activePath }: NavBarProps) => {
       to: '/insights',
       isActive: activePath.startsWith('/insights'),
     },
+    {
+      label: 'Reports',
+      to: '/reports',
+      isActive: activePath.startsWith('/reports'),
+    },
   ];
 
   const { logout } = useAuth();

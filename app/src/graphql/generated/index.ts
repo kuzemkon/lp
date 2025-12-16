@@ -1291,6 +1291,15 @@ export type PortfolioDashboardQueryVariables = Exact<{
 
 export type PortfolioDashboardQuery = { __typename: 'Query', fundMetrics: Array<{ __typename: 'fund_report_aggregated', countAll?: number | null, sum?: { __typename: 'fund_report_aggregated_fields', capital_called?: number | null, realized_value?: number | null, unrealized_value?: number | null, total_value?: number | null } | null, avg?: { __typename: 'fund_report_aggregated_fields', moic?: number | null, net_irr?: number | null } | null }>, fundMetricsTimeline: Array<{ __typename: 'fund_report_aggregated', group?: Record<string, unknown> | null, sum?: { __typename: 'fund_report_aggregated_fields', capital_called?: number | null, realized_value?: number | null, total_value?: number | null } | null, avg?: { __typename: 'fund_report_aggregated_fields', moic?: number | null, net_irr?: number | null } | null }>, fundsTotal: Array<{ __typename: 'fund_report_aggregated', countDistinct?: { __typename: 'fund_report_aggregated_count', fund_id?: number | null } | null }>, latestReports: Array<{ __typename: 'fund_report', id: string, report_date: string, num_investments?: number | null, total_value?: number | null, capital_called?: number | null, realized_value?: number | null, moic?: number | null }>, cashFlows: Array<{ __typename: 'company_report', id: string, report_date: string, invested_capital?: number | null, realized_value?: number | null, unrealized_value?: number | null }> };
 
+export type ReportsListQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
+
+
+export type ReportsListQuery = { __typename: 'Query', reports: Array<{ __typename: 'fund_report', id: string, report_date: string, created_at?: string | null, fund_id?: { __typename: 'fund', id: string, name: string } | null, fund_manager_id?: { __typename: 'fund_manager', id: string, name: string } | null }>, total: Array<{ __typename: 'fund_report_aggregated', count?: { __typename: 'fund_report_aggregated_count', id?: number | null } | null }> };
+
 
 export const CompanyInsightsAggregationDocument = gql`
     query CompanyInsightsAggregation($filter: company_report_filter, $groupBy: [String!]) {
@@ -2139,3 +2148,60 @@ export type PortfolioDashboardQueryHookResult = ReturnType<typeof usePortfolioDa
 export type PortfolioDashboardLazyQueryHookResult = ReturnType<typeof usePortfolioDashboardLazyQuery>;
 export type PortfolioDashboardSuspenseQueryHookResult = ReturnType<typeof usePortfolioDashboardSuspenseQuery>;
 export type PortfolioDashboardQueryResult = Apollo.QueryResult<PortfolioDashboardQuery, PortfolioDashboardQueryVariables>;
+export const ReportsListDocument = gql`
+    query ReportsList($limit: Int = 20, $offset: Int = 0, $sort: [String] = ["-report_date"]) {
+  reports: fund_report(limit: $limit, offset: $offset, sort: $sort) {
+    id
+    report_date
+    created_at
+    fund_id {
+      id
+      name
+    }
+    fund_manager_id {
+      id
+      name
+    }
+  }
+  total: fund_report_aggregated(limit: 1) {
+    count {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useReportsListQuery__
+ *
+ * To run a query within a React component, call `useReportsListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReportsListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReportsListQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useReportsListQuery(baseOptions?: Apollo.QueryHookOptions<ReportsListQuery, ReportsListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ReportsListQuery, ReportsListQueryVariables>(ReportsListDocument, options);
+      }
+export function useReportsListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReportsListQuery, ReportsListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ReportsListQuery, ReportsListQueryVariables>(ReportsListDocument, options);
+        }
+export function useReportsListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ReportsListQuery, ReportsListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ReportsListQuery, ReportsListQueryVariables>(ReportsListDocument, options);
+        }
+export type ReportsListQueryHookResult = ReturnType<typeof useReportsListQuery>;
+export type ReportsListLazyQueryHookResult = ReturnType<typeof useReportsListLazyQuery>;
+export type ReportsListSuspenseQueryHookResult = ReturnType<typeof useReportsListSuspenseQuery>;
+export type ReportsListQueryResult = Apollo.QueryResult<ReportsListQuery, ReportsListQueryVariables>;

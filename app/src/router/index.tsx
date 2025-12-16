@@ -7,6 +7,7 @@ import CompanyDetailPage from '../components/funds/CompanyDetailPage';
 import PrivacyPolicyPage from '../components/legal/PrivacyPolicyPage';
 import TermsOfUsePage from '../components/legal/TermsOfUsePage';
 import PortfolioInsightsPage from '../components/insights/PortfolioInsightsPage';
+import ReportsPage from '../components/reports/ReportsPage';
 import MetricDetailPage from '../components/metrics/MetricDetailPage';
 import { DashboardFilterProvider } from '../components/dashboard/filters/DashboardFilterContext';
 import RequireAuth from '../components/auth/RequireAuth';
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: '/insights',
         element: <PortfolioInsightsPage />,
+      },
+      {
+        path: '/reports',
+        element: <ReportsPage />,
       },
       {
         path: '/metrics/:metricId',

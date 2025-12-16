@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@tremor/react';
 import {
@@ -13,6 +13,7 @@ import Chip from '../ui/Chip';
 import SurfaceCard from '../ui/SurfaceCard';
 import { useDashboardFilters } from './filters/useDashboardFilters';
 import { formatCompactCurrency, formatNumber } from './utils/formatters';
+import UploadReportModal from '../reports/UploadReportModal';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 const buildDistribution = <T,>(
@@ -63,6 +64,7 @@ const normalizePercentValue = (value?: number | null) => {
 
 const DashboardPage = () => {
   const navigate = useNavigate();
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
   useDocumentTitle('Dashboard');
 
   const {
@@ -305,15 +307,20 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
               Analyze the performance and composition of your investment portfolio.
             </p>
           </div>
-          {filtersList.length > 0 && (
-            <button
-              type="button"
-              className="text-sm font-semibold text-mint-600"
-              onClick={clearFilters}
-            >
-              Clear filters
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            <Button color="emerald" className="rounded-md px-5 py-2.5 text-base" onClick={() => setUploadModalOpen(true)}>
+              Upload report
+            </Button>
+            {filtersList.length > 0 && (
+              <button
+                type="button"
+                className="text-sm font-semibold text-mint-600"
+                onClick={clearFilters}
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
         </div>
         {filtersList.length > 0 && (
           <div className="flex flex-wrap gap-3">
@@ -419,6 +426,8 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
       <section>
         <FundsTable variant="card" />
       </section>
+
+      <UploadReportModal open={uploadModalOpen} onClose={() => setUploadModalOpen(false)} />
     </div>
   );
 };
