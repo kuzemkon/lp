@@ -13,6 +13,7 @@ import Chip from '../ui/Chip';
 import SurfaceCard from '../ui/SurfaceCard';
 import { useDashboardFilters } from './filters/useDashboardFilters';
 import { formatCompactCurrency, formatNumber } from './utils/formatters';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 const buildDistribution = <T,>(
   items: readonly T[] | null | undefined,
@@ -62,6 +63,7 @@ const normalizePercentValue = (value?: number | null) => {
 
 const DashboardPage = () => {
   const navigate = useNavigate();
+  useDocumentTitle('Dashboard');
 
   const {
     filters,

@@ -13,6 +13,7 @@ import {
   type FundInsightsRecordsQuery,
 } from '../../graphql/generated';
 import { formatCompactCurrency, formatNumber, formatPercent } from '../dashboard/utils/formatters';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 type EntityType = 'fund' | 'company';
 type AggregatorOption = 'sum' | 'avg' | 'min' | 'max' | 'count';
@@ -464,6 +465,7 @@ const createGroupNode = (entity: EntityType, operator: 'AND' | 'OR' = 'AND'): Fi
 });
 
 const PortfolioInsightsPage = () => {
+  useDocumentTitle('Insights');
   const [entity, setEntity] = useState<EntityType>('company');
   const [selectedColumns, setSelectedColumns] = useState<SelectedColumn[]>(() => defaultColumns.company);
   const [includeCount, setIncludeCount] = useState(false);

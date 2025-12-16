@@ -259,6 +259,7 @@ export type Subscription = {
   __typename: 'Subscription';
   company_mutated?: Maybe<Company_Mutated>;
   company_report_mutated?: Maybe<Company_Report_Mutated>;
+  directus_users_mutated?: Maybe<Directus_Users_Mutated>;
   fund_manager_mutated?: Maybe<Fund_Manager_Mutated>;
   fund_mutated?: Maybe<Fund_Mutated>;
   fund_report_mutated?: Maybe<Fund_Report_Mutated>;
@@ -272,6 +273,11 @@ export type SubscriptionCompany_MutatedArgs = {
 
 
 export type SubscriptionCompany_Report_MutatedArgs = {
+  event?: InputMaybe<EventEnum>;
+};
+
+
+export type SubscriptionDirectus_Users_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
@@ -594,6 +600,57 @@ export type Datetime_Functions = {
   week?: Maybe<Scalars['Int']['output']>;
   weekday?: Maybe<Scalars['Int']['output']>;
   year?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Directus_Users = {
+  __typename: 'directus_users';
+  avatar?: Maybe<Scalars['ID']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  first_name?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  last_name?: Maybe<Scalars['String']['output']>;
+  organization_id?: Maybe<Organizations>;
+};
+
+
+export type Directus_UsersOrganization_IdArgs = {
+  filter?: InputMaybe<Organizations_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Directus_Users_Filter = {
+  _and?: InputMaybe<Array<InputMaybe<Directus_Users_Filter>>>;
+  _or?: InputMaybe<Array<InputMaybe<Directus_Users_Filter>>>;
+  avatar?: InputMaybe<Id_Filter_Operators>;
+  email?: InputMaybe<String_Filter_Operators>;
+  first_name?: InputMaybe<String_Filter_Operators>;
+  id?: InputMaybe<Id_Filter_Operators>;
+  last_name?: InputMaybe<String_Filter_Operators>;
+  organization_id?: InputMaybe<Organizations_Filter>;
+};
+
+export type Directus_Users_Mutated = {
+  __typename: 'directus_users_mutated';
+  data?: Maybe<Directus_Users>;
+  event?: Maybe<EventEnum>;
+  key: Scalars['ID']['output'];
+};
+
+export type Directus_Users_Quantifier_Filter = {
+  _and?: InputMaybe<Array<InputMaybe<Directus_Users_Filter>>>;
+  _none?: InputMaybe<Directus_Users_Filter>;
+  _or?: InputMaybe<Array<InputMaybe<Directus_Users_Filter>>>;
+  _some?: InputMaybe<Directus_Users_Filter>;
+  avatar?: InputMaybe<Id_Filter_Operators>;
+  email?: InputMaybe<String_Filter_Operators>;
+  first_name?: InputMaybe<String_Filter_Operators>;
+  id?: InputMaybe<Id_Filter_Operators>;
+  last_name?: InputMaybe<String_Filter_Operators>;
+  organization_id?: InputMaybe<Organizations_Filter>;
 };
 
 export type Fund = {
@@ -949,13 +1006,23 @@ export type Organizations = {
   name: Scalars['String']['output'];
   updated_at?: Maybe<Scalars['Date']['output']>;
   updated_at_func?: Maybe<Datetime_Functions>;
-  users?: Maybe<Scalars['String']['output']>;
+  users?: Maybe<Array<Maybe<Directus_Users>>>;
   users_func?: Maybe<Count_Functions>;
 };
 
 
 export type OrganizationsFund_ReportsArgs = {
   filter?: InputMaybe<Fund_Report_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type OrganizationsUsersArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -992,7 +1059,7 @@ export type Organizations_Filter = {
   name?: InputMaybe<String_Filter_Operators>;
   updated_at?: InputMaybe<Date_Filter_Operators>;
   updated_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
-  users?: InputMaybe<String_Filter_Operators>;
+  users?: InputMaybe<Directus_Users_Quantifier_Filter>;
   users_func?: InputMaybe<Count_Function_Filter_Operators>;
 };
 
@@ -1128,7 +1195,7 @@ export type Version_Organizations = {
   name: Scalars['String']['output'];
   updated_at?: Maybe<Scalars['Date']['output']>;
   updated_at_func?: Maybe<Datetime_Functions>;
-  users?: Maybe<Scalars['String']['output']>;
+  users?: Maybe<Scalars['JSON']['output']>;
   users_func?: Maybe<Count_Functions>;
 };
 

@@ -6,6 +6,7 @@ import { useFundCompaniesQuery } from '../../graphql/generated';
 import SkeletonCard from '../dashboard/widgets/SkeletonCard';
 import SurfaceCard from '../ui/SurfaceCard';
 import { formatCompactCurrency, formatNumber } from '../dashboard/utils/formatters';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 const PAGE_SIZE = 20;
 
@@ -35,6 +36,7 @@ const FundCompaniesPage = () => {
   });
 
   const fundName = data?.fund?.name ?? locationState?.fundName ?? 'Fund';
+  useDocumentTitle('Funds', fundName);
   const latestReport = data?.latestReport?.[0] ?? null;
   const rows = latestReport?.company_reports ?? [];
   const totalCount = latestReport?.company_reports_func?.count ?? rows.length;

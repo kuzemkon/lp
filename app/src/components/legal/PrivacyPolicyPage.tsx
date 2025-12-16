@@ -1,11 +1,14 @@
+import useDocumentTitle from '../../hooks/useDocumentTitle';
+
 const PrivacyPolicyPage = () => {
+  useDocumentTitle('Privacy Policy');
   return (
     <div className="space-y-6">
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-graphite-400">Legal</p>
         <h1 className="text-4xl font-semibold text-graphite-800">Privacy Policy</h1>
         <p className="mt-2 text-base text-graphite-500">
-          This Privacy Policy explains how FundView collects, uses, and protects information about your
+          This Privacy Policy explains how Verax collects, uses, and protects information about your
           organization when you use our services.
         </p>
       </div>
@@ -35,7 +38,7 @@ const PrivacyPolicyPage = () => {
         <div>
           <h2 className="text-lg font-semibold text-graphite-800">Contact</h2>
           <p>
-            Questions about this policy can be sent to privacy@fundview.app or FundView Legal, 123 Market
+            Questions about this policy can be sent to privacy@verax.app or Verax Legal, 123 Market
             Street, San Francisco, CA 94105.
           </p>
         </div>

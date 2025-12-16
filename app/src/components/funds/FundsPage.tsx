@@ -1,9 +1,11 @@
 import FundsTable from '../dashboard/widgets/FundsTable';
 import Chip from '../ui/Chip';
 import { useDashboardFilters } from '../dashboard/filters/useDashboardFilters';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 const FundsPage = () => {
   const { filters, removeFilter, clearFilters } = useDashboardFilters();
+  useDocumentTitle('Funds');
   const filtersList = Object.entries(filters);
 
   return (

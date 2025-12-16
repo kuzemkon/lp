@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { type Location, useLocation, useNavigate } from 'react-router-dom';
 import { clsx } from 'clsx';
 import { useAuth } from '../../auth/AuthProvider';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 interface LocationState {
   from?: Location;
@@ -10,6 +11,7 @@ interface LocationState {
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const LoginPage = () => {
+  useDocumentTitle('Sign In');
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, isLoading, login } = useAuth();
@@ -100,7 +102,7 @@ const LoginPage = () => {
             FV
           </div>
           <h1 className="text-2xl font-semibold text-graphite-800">Welcome back</h1>
-          <p className="mt-2 text-sm text-graphite-500">Sign in to access your FundView dashboard.</p>
+          <p className="mt-2 text-sm text-graphite-500">Sign in to access your Verax dashboard.</p>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit} noValidate>

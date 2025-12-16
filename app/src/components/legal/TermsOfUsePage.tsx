@@ -1,18 +1,21 @@
+import useDocumentTitle from '../../hooks/useDocumentTitle';
+
 const TermsOfUsePage = () => {
+  useDocumentTitle('Terms of Use');
   return (
     <div className="space-y-6">
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-graphite-400">Legal</p>
         <h1 className="text-4xl font-semibold text-graphite-800">Terms of Use</h1>
         <p className="mt-2 text-base text-graphite-500">
-          These terms govern your use of the FundView platform and any data or content provided through it.
+          These terms govern your use of the Verax platform and any data or content provided through it.
         </p>
       </div>
       <section className="space-y-3 text-sm leading-relaxed text-graphite-600">
         <div>
           <h2 className="text-lg font-semibold text-graphite-800">Acceptable use</h2>
           <p>
-            You agree to use FundView only for authorized business purposes, comply with applicable laws, and
+            You agree to use Verax only for authorized business purposes, comply with applicable laws, and
             keep account credentials confidential. Unauthorized access or data scraping is prohibited.
           </p>
         </div>
@@ -26,7 +29,7 @@ const TermsOfUsePage = () => {
         <div>
           <h2 className="text-lg font-semibold text-graphite-800">Disclaimers</h2>
           <p>
-            FundView provides information “as is” without warranties. Investment decisions should be based on
+            Verax provides information “as is” without warranties. Investment decisions should be based on
             your own diligence and independent advice.
           </p>
         </div>

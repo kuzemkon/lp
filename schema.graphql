@@ -260,6 +260,45 @@ type datetime_functions {
   second: Int
 }
 
+type directus_users {
+  id: ID!
+  first_name: String
+  last_name: String
+  email: String
+  avatar: ID
+  organization_id(filter: organizations_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): organizations
+}
+
+input directus_users_filter {
+  id: id_filter_operators
+  first_name: string_filter_operators
+  last_name: string_filter_operators
+  email: string_filter_operators
+  avatar: id_filter_operators
+  organization_id: organizations_filter
+  _and: [directus_users_filter]
+  _or: [directus_users_filter]
+}
+
+type directus_users_mutated {
+  key: ID!
+  event: EventEnum
+  data: directus_users
+}
+
+input directus_users_quantifier_filter {
+  id: id_filter_operators
+  first_name: string_filter_operators
+  last_name: string_filter_operators
+  email: string_filter_operators
+  avatar: id_filter_operators
+  organization_id: organizations_filter
+  _and: [directus_users_filter]
+  _or: [directus_users_filter]
+  _some: directus_users_filter
+  _none: directus_users_filter
+}
+
 enum EventEnum {
   create
   update
@@ -552,7 +591,7 @@ type organizations {
   updated_at_func: datetime_functions
   fund_reports(filter: fund_report_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [fund_report]
   fund_reports_func: count_functions
-  users: String
+  users(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [directus_users]
   users_func: count_functions
 }
 
@@ -581,7 +620,7 @@ input organizations_filter {
   updated_at_func: datetime_function_filter_operators
   fund_reports: fund_report_quantifier_filter
   fund_reports_func: count_function_filter_operators
-  users: string_filter_operators
+  users: directus_users_quantifier_filter
   users_func: count_function_filter_operators
   _and: [organizations_filter]
   _or: [organizations_filter]
@@ -644,6 +683,7 @@ input string_filter_operators {
 
 type Subscription {
   organizations_mutated(event: EventEnum): organizations_mutated
+  directus_users_mutated(event: EventEnum): directus_users_mutated
   company_report_mutated(event: EventEnum): company_report_mutated
   fund_mutated(event: EventEnum): fund_mutated
   company_mutated(event: EventEnum): company_mutated
@@ -748,7 +788,7 @@ type version_organizations {
   updated_at_func: datetime_functions
   fund_reports: JSON
   fund_reports_func: count_functions
-  users: String
+  users: JSON
   users_func: count_functions
 }
 

@@ -97,6 +97,10 @@ const CompanyDetailPage = () => {
     );
   }
 
+  const fundName = data?.fund?.name ?? locationState?.fundName;
+  const companyName = data?.company?.name ?? locationState?.companyName;
+  useDocumentTitle('Funds', fundName, companyName);
+
   if (loading && !data) {
     return <SkeletonCard lines={6} />;
   }
@@ -112,8 +116,8 @@ const CompanyDetailPage = () => {
     );
   }
 
-  const fundName = data?.fund?.name ?? locationState?.fundName ?? 'Fund';
-  const companyName = data?.company?.name ?? locationState?.companyName ?? 'Company';
+  const resolvedFundName = fundName ?? 'Fund';
+  const resolvedCompanyName = companyName ?? 'Company';
   const latestReport = data?.latestReport?.[0] ?? null;
   const earliestReport = data?.earliestReport?.[0] ?? null;
 
@@ -146,15 +150,15 @@ const CompanyDetailPage = () => {
         </Link>
         <span className="mx-2 text-graphite-300">/</span>
         <Link to={`/funds/${encodeURIComponent(fundId ?? '')}`} className="font-semibold text-mint-600 hover:text-mint-500">
-          {fundName}
+          {resolvedFundName}
         </Link>
         <span className="mx-2 text-graphite-300">/</span>
-        <span className="font-semibold text-graphite-700">{companyName}</span>
+        <span className="font-semibold text-graphite-700">{resolvedCompanyName}</span>
       </nav>
 
       <section className="space-y-2">
         <div>
-          <h1 className="text-4xl font-semibold text-graphite-800">{companyName}</h1>
+          <h1 className="text-4xl font-semibold text-graphite-800">{resolvedCompanyName}</h1>
           <p className="mt-1 text-base text-graphite-500">
             Performance snapshot based on fund-reported company data.
           </p>
@@ -288,3 +292,4 @@ const CompanyDetailPage = () => {
 };
 
 export default CompanyDetailPage;
+import useDocumentTitle from '../../hooks/useDocumentTitle';

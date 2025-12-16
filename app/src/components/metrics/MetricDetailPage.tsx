@@ -8,6 +8,7 @@ import SkeletonCard from '../dashboard/widgets/SkeletonCard';
 import { formatCompactCurrency, formatNumber, formatPercent } from '../dashboard/utils/formatters';
 import { Button } from '@tremor/react';
 import { clsx } from 'clsx';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 const formatDateLabel = (value: string | number | Date) =>
   new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(value));
@@ -122,6 +123,7 @@ const formatDelta = (value: number | null | undefined, metric: MetricDefinition)
 const MetricDetailPage = () => {
   const { metricId } = useParams<{ metricId: string }>();
   const metric = metricId ? metricDefinitions[metricId] : undefined;
+  useDocumentTitle('Metrics', metric?.title ?? undefined);
   const { fundReportFilter } = useDashboardFilters();
 
   const { data, loading, error, refetch } = useMetricDetailQuery({
