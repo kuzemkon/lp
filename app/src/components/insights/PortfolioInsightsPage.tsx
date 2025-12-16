@@ -390,8 +390,14 @@ const getAggregatedMetricValue = (row: AggregationResultRow, aggregator: Support
   if (!bucket || typeof bucket !== 'object') {
     return null;
   }
-  const value = (bucket as Record<string, number | null | undefined>)[metricField];
-  return typeof value === 'number' ? value : value ?? null;
+  const value = (bucket as Record<string, unknown>)[metricField];
+  if (typeof value === 'number') {
+    return value;
+  }
+  if (value === null) {
+    return null;
+  }
+  return null;
 };
 
 const presets: PresetConfig[] = [
