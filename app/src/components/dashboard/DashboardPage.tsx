@@ -8,6 +8,7 @@ import {
 import KpiCard from './widgets/KpiCard';
 import PieChartCard from './widgets/PieChartCard';
 import SkeletonCard from './widgets/SkeletonCard';
+import FundsTable from './widgets/FundsTable';
 import Chip from '../ui/Chip';
 import SurfaceCard from '../ui/SurfaceCard';
 import { useDashboardFilters } from './filters/useDashboardFilters';
@@ -357,7 +358,7 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
                 ))}
          </div>
        )}
-     </section>
+      </section>
 
       <section className="space-y-4">
         <div>
@@ -411,6 +412,10 @@ const irrDelta = computeDelta(timelineLatestValues.irr, timelinePreviousValues.i
             />
           </div>
         )}
+      </section>
+
+      <section>
+        <FundsTable variant="card" />
       </section>
     </div>
   );
